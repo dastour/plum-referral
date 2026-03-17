@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Your Plum Claim Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --plum: #5B2D8E;
+    --plum-light: #7B4DB8;
+    --plum-glow: #A86FE0;
+    --mint: #00D09C;
+    --mint-light: #A0F0D8;
+    --mint-dark: #00B386;
+    --warm: #FFF7ED;
+    --warm-2: #FEF0DC;
+    --text: #1A1A2E;
+    --text-2: #4A4A6A;
+    --text-3: #8888A8;
+    --white: #FFFFFF;
+    --red: #FF4757;
+    --gold: #F4A623;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === HEADER === */
+  .header {
+    background: linear-gradient(135deg, var(--plum) 0%, var(--plum-light) 100%);
+    padding: 20px 20px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0; right: 0;
+    height: 40px;
+    background: var(--warm);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+  .header-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: var(--white);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    opacity: 0.9;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    color: var(--mint-light);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* === CLAIM STORY CARD === */
+  .claim-card {
+    margin: -8px 16px 20px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 8px 32px rgba(91,45,142,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    position: relative;
+    z-index: 2;
+  }
+  .claim-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--text-3);
+    font-weight: 500;
+    margin-bottom: 4px;
+    font-style: italic;
+  }
+  .claim-card-name {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .claim-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .claim-stat {
+    background: var(--warm);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+  }
+  .claim-stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--plum);
+    line-height: 1;
+  }
+  .claim-stat-value.mint { color: var(--mint-dark); }
+  .claim-stat-label {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-top: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .claim-hospital {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-2);
+    padding: 12px 16px;
+    background: var(--warm);
+    border-radius: 12px;
+  }
+  .claim-hospital-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--mint);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* === TRUST STRIP === */
+  .trust-strip {
+    margin: 0 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .trust-strip-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--gold) 0%, #F0C060 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .trust-strip-text {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.4;
+  }
+  .trust-strip-text strong { color: var(--text); }
+
+  /* === CTA SECTION === */
+  .cta-section {
+    margin: 0 16px 20px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 8px 32px rgba(91,45,142,0.08);
+  }
+  .cta-headline {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .cta-sub {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #E8E8F0;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: var(--text);
+    background: var(--warm);
+    transition: border-color 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .form-input:focus {
+    border-color: var(--plum-glow);
+    background: var(--white);
+  }
+  .form-input::placeholder { color: var(--text-3); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--mint-dark) 0%, var(--mint) 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(0,209,156,0.3);
+    margin-top: 8px;
+  }
+  .btn-primary:active {
+    transform: scale(0.97);
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* === REWARD FREEBIE BANNER === */
+  .freebie-banner {
+    margin: 0 16px 20px;
+    background: linear-gradient(135deg, var(--warm-2) 0%, #FFF4E6 100%);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .freebie-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .freebie-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .freebie-text strong { color: var(--plum); }
+
+  /* === SPIN WHEEL === */
+  .spin-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,46,0.85);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+  }
+  .spin-overlay.active { display: flex; }
+
+  .spin-container {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 32px 24px;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+    animation: slideUp 0.4s ease-out;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .spin-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .spin-sub {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+  }
+
+  .wheel-wrapper {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    margin: 0 auto 24px;
+  }
+  .wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    box-shadow: 0 4px 24px rgba(91,45,142,0.15);
+  }
+  .wheel-pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 24px solid var(--plum);
+    z-index: 5;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  }
+  .wheel-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px; height: 48px;
+    background: var(--white);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .btn-spin {
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--plum) 0%, var(--plum-light) 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(91,45,142,0.3);
+    transition: transform 0.15s;
+  }
+  .btn-spin:active { transform: scale(0.97); }
+
+  /* === RESULT SCREEN === */
+  .result-screen {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .result-screen.active { display: block; }
+  .result-emoji { font-size: 56px; margin-bottom: 12px; }
+  .result-prize {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--plum);
+    margin-bottom: 8px;
+  }
+  .result-note {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  /* === SUCCESS STATE === */
+  .success-section {
+    display: none;
+    margin: 0 16px 20px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(91,45,142,0.08);
+  }
+  .success-section.active { display: block; }
+  .success-check {
+    width: 56px; height: 56px;
+    background: var(--mint);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 28px;
+  }
+  .success-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .success-sub {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center;
+    padding: 20px 16px 32px;
+    font-size: 11px;
+    color: var(--text-3);
+    line-height: 1.5;
+  }
+
+  /* === LOADING STATE === */
+  .loading-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .loading-dot {
+    width: 10px; height: 10px;
+    background: var(--plum-glow);
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 1.2s infinite ease-in-out;
+  }
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* === ERROR STATE === */
+  .error-screen {
+    display: none;
+    margin: 40px 16px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .hide { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loadingScreen" class="loading-screen">
+  <div>
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+  </div>
+  <p style="font-size: 13px; color: var(--text-3);">Loading your friend's story...</p>
+</div>
+
+<!-- ERROR -->
+<div id="errorScreen" class="error-screen">
+  <p style="font-size: 48px; margin-bottom: 12px;">🔗</p>
+  <p style="font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px;">Link not found</p>
+  <p style="font-size: 14px; color: var(--text-2);">This referral link may have expired or is invalid. Ask your friend to share a new one.</p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="mainContent" class="hide">
+
+  <div class="header">
+    <div class="header-logo">plum</div>
+    <div class="header-badge">✓ Verified Claim Story</div>
+  </div>
+
+  <!-- CLAIM STORY CARD -->
+  <div class="claim-card">
+    <div class="claim-card-title">A real story from</div>
+    <div class="claim-card-name" id="referrerName">--</div>
+    <div class="claim-stats">
+      <div class="claim-stat">
+        <div class="claim-stat-value" id="claimAmount">--</div>
+        <div class="claim-stat-label">Claim Amount</div>
+      </div>
+      <div class="claim-stat">
+        <div class="claim-stat-value mint" id="settlementTime">--</div>
+        <div class="claim-stat-label">Settled In</div>
+      </div>
+    </div>
+    <div class="claim-hospital">
+      <div class="claim-hospital-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M3 21h18M9 8h6M12 5v6M9 21V12h6v9"/></svg>
+      </div>
+      <span id="hospitalName">--</span>
+    </div>
+  </div>
+
+  <!-- TRUST STRIP -->
+  <div class="trust-strip">
+    <div class="trust-strip-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    </div>
+    <div class="trust-strip-text">
+      <strong>Plum NPS: 91+</strong> on telehealth.<br>4,500+ employers. 500K+ lives covered.
+    </div>
+  </div>
+
+  <!-- FREEBIE BANNER -->
+  <div class="freebie-banner" id="freebieSection">
+    <div class="freebie-icon">🎁</div>
+    <div class="freebie-text">
+      <strong>Free health checkup worth Rs 1,299</strong> when you get a quote. 70+ tests. Takes 15 minutes. Your friend <span id="referrerFirstName">--</span> thought you should have this.
+    </div>
+  </div>
+
+  <!-- CTA FORM -->
+  <div class="cta-section" id="ctaSection">
+    <div class="cta-headline">Most people your age have zero health cover.</div>
+    <div class="cta-sub">See what a personal health plan costs. Takes 30 seconds. No spam, no calls unless you ask.</div>
+    <div class="form-group">
+      <label class="form-label" for="refName">Your name</label>
+      <input type="text" class="form-input" id="refName" placeholder="First name" autocomplete="given-name">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="refPhone">Phone number</label>
+      <input type="tel" class="form-input" id="refPhone" placeholder="10-digit mobile number" autocomplete="tel" maxlength="10" inputmode="numeric" pattern="[0-9]*">
+    </div>
+    <button class="btn-primary" id="submitBtn" onclick="handleSubmit()">See My Quote →</button>
+    <p style="font-size: 11px; color: var(--text-3); text-align: center; margin-top: 12px;">By continuing, you agree to receive your quote via WhatsApp.</p>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-section" id="successSection">
+    <div class="success-check">✓</div>
+    <div class="success-title">You're in!</div>
+    <div class="success-sub">Your personalized quote is on its way via WhatsApp. Your free health checkup will be activated once you choose a plan.</div>
+  </div>
+
+  <div class="footer">
+    Plum Insurance Broking Pvt. Ltd. | IRDAI License No. 764<br>
+    CIN: U66000MH2019PTC321127
+  </div>
+</div>
+
+<!-- SPIN THE WHEEL OVERLAY -->
+<div class="spin-overlay" id="spinOverlay">
+  <div class="spin-container">
+    <div id="spinContent">
+      <div class="spin-title">You earned a spin!</div>
+      <div class="spin-sub">Tap to find out what you won.</div>
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="260" height="260"></canvas>
+        <div class="wheel-center">🎯</div>
+      </div>
+      <button class="btn-spin" id="spinBtn" onclick="spinWheel()">SPIN!</button>
+    </div>
+    <div class="result-screen" id="resultScreen">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-prize" id="resultPrize">--</div>
+      <div class="result-note" id="resultNote">--</div>
+      <button class="btn-primary" style="margin-top: 20px;" onclick="closeSpinOverlay()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==========================================
+// CONFIGURATION
+// ==========================================
+
+// Replace this with your deployed Google Apps Script web app URL
+const APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+// Spin probabilities (must match your spreadsheet)
+const PRIZES = [
+  { name: 'Free Telehealth Consult', prob: 0.55, emoji: '👨‍⚕️', color: '#00D09C', note: 'A free doctor consultation, redeemable anytime. Details on WhatsApp.' },
+  { name: 'Free Health Checkup', prob: 0.30, emoji: '🩺', color: '#5B2D8E', note: 'A full health checkup worth Rs 1,299 with 70+ tests. Voucher on WhatsApp.' },
+  { name: '1 Month Cultpass ELITE', prob: 0.15, emoji: '💪', color: '#F4A623', note: 'Unlimited access to gyms, yoga, swimming, and more for a full month!' },
+];
+
+// ==========================================
+// STATE
+// ==========================================
+let referrerData = null;
+let referralData = {};
+let hasSpun = false;
+
+// ==========================================
+// INIT: READ URL PARAMS + FETCH REFERRER DATA
+// ==========================================
+
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const refId = params.get('ref');
+
+  if (!refId) {
+    showError();
+    return;
+  }
+
+  try {
+    // Fetch referrer data from Google Sheets via Apps Script
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=getReferrer&ref=${encodeURIComponent(refId)}`);
+    const data = await response.json();
+
+    if (data.error || !data.name) {
+      showError();
+      return;
+    }
+
+    referrerData = data;
+    referrerData.ref_id = refId;
+    populatePage();
+  } catch (err) {
+    // FALLBACK: If Apps Script is not configured, use URL params directly
+    // This allows testing without the backend
+    const name = params.get('name') || 'Your Friend';
+    const amount = params.get('amount') || '1,50,000';
+    const time = params.get('time') || '27 min';
+    const hospital = params.get('hospital') || 'Apollo Hospitals';
+
+    referrerData = {
+      ref_id: refId,
+      name: name,
+      claim_amount: amount,
+      settlement_time: time,
+      hospital: hospital,
+    };
+    populatePage();
+  }
+}
+
+function populatePage() {
+  document.getElementById('loadingScreen').classList.add('hide');
+  document.getElementById('mainContent').classList.remove('hide');
+
+  document.getElementById('referrerName').textContent = referrerData.name + "'s claim was settled.";
+  document.getElementById('claimAmount').textContent = 'Rs ' + referrerData.claim_amount;
+  document.getElementById('settlementTime').textContent = referrerData.settlement_time;
+  document.getElementById('hospitalName').textContent = referrerData.hospital;
+  document.getElementById('referrerFirstName').textContent = referrerData.name.split(' ')[0];
+}
+
+function showError() {
+  document.getElementById('loadingScreen').classList.add('hide');
+  document.getElementById('errorScreen').style.display = 'block';
+}
+
+// ==========================================
+// FORM SUBMISSION
+// ==========================================
+
+async function handleSubmit() {
+  const name = document.getElementById('refName').value.trim();
+  const phone = document.getElementById('refPhone').value.trim();
+
+  if (!name) {
+    document.getElementById('refName').style.borderColor = 'var(--red)';
+    return;
+  }
+  if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+    document.getElementById('refPhone').style.borderColor = 'var(--red)';
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Getting your quote...';
+
+  referralData = {
+    ref_id: referrerData.ref_id,
+    referrer_name: referrerData.name,
+    referred_name: name,
+    referred_phone: phone,
+    stage: 'quote_requested',
+    reward: '',
+    timestamp: new Date().toISOString(),
+  };
+
+  // Write to Google Sheet via Apps Script
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'logReferral', data: referralData }),
+    });
+  } catch (err) {
+    console.log('Sheet write attempted. If Apps Script is not set up, data logged to console:', referralData);
+  }
+
+  // Show success + spin
+  document.getElementById('ctaSection').classList.add('hide');
+  document.getElementById('freebieSection').classList.add('hide');
+  document.getElementById('successSection').classList.add('active');
+
+  // Show spin wheel after brief delay
+  setTimeout(() => {
+    drawWheel();
+    document.getElementById('spinOverlay').classList.add('active');
+  }, 1500);
+}
+
+// ==========================================
+// SPIN THE WHEEL
+// ==========================================
+
+function drawWheel() {
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  const cx = 130, cy = 130, r = 125;
+
+  let startAngle = 0;
+  PRIZES.forEach((prize, i) => {
+    const sliceAngle = prize.prob * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
+    ctx.closePath();
+    ctx.fillStyle = prize.color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Label
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(startAngle + sliceAngle / 2);
+    ctx.fillStyle = '#fff';
+    ctx.font = '600 11px "DM Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    // Wrap text
+    const words = prize.name.split(' ');
+    let line1 = '', line2 = '';
+    if (words.length <= 2) {
+      line1 = prize.name;
+    } else {
+      line1 = words.slice(0, 2).join(' ');
+      line2 = words.slice(2).join(' ');
+    }
+    const offset = r * 0.6;
+    ctx.fillText(line1, offset, line2 ? -7 : 0);
+    if (line2) ctx.fillText(line2, offset, 9);
+    ctx.restore();
+
+    startAngle += sliceAngle;
+  });
+}
+
+function spinWheel() {
+  if (hasSpun) return;
+  hasSpun = true;
+
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('spinBtn').textContent = 'Spinning...';
+
+  // Determine prize
+  const rand = Math.random();
+  let cumulative = 0;
+  let winIndex = 0;
+  for (let i = 0; i < PRIZES.length; i++) {
+    cumulative += PRIZES[i].prob;
+    if (rand <= cumulative) { winIndex = i; break; }
+  }
+
+  const prize = PRIZES[winIndex];
+
+  // Calculate rotation to land on the winning slice
+  // The pointer is at top (270 degrees / 1.5*PI)
+  // We need the middle of the winning slice to align with the pointer
+  let sliceStart = 0;
+  for (let i = 0; i < winIndex; i++) sliceStart += PRIZES[i].prob;
+  const sliceMid = sliceStart + prize.prob / 2;
+  const targetAngle = (1 - sliceMid) * 360; // Degrees from top, clockwise
+  const totalRotation = 360 * 8 + targetAngle; // 8 full rotations + landing
+
+  const canvas = document.getElementById('wheelCanvas');
+  canvas.style.transform = `rotate(${totalRotation}deg)`;
+
+  // After spin completes
+  setTimeout(() => {
+    document.getElementById('spinContent').classList.add('hide');
+    const result = document.getElementById('resultScreen');
+    result.classList.add('active');
+    document.getElementById('resultEmoji').textContent = prize.emoji;
+    document.getElementById('resultPrize').textContent = 'You won: ' + prize.name + '!';
+    document.getElementById('resultNote').textContent = prize.note;
+
+    // Update referral data with reward
+    referralData.reward = prize.name;
+
+    // Write reward to Google Sheet
+    try {
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'logReward', data: referralData }),
+      });
+    } catch (err) {
+      console.log('Reward logged to console:', referralData);
+    }
+  }, 4200);
+}
+
+function closeSpinOverlay() {
+  document.getElementById('spinOverlay').classList.remove('active');
+}
+
+// ==========================================
+// PHONE INPUT: numbers only
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('refPhone').addEventListener('input', function(e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    this.style.borderColor = '#E8E8F0';
+  });
+  document.getElementById('refName').addEventListener('input', function() {
+    this.style.borderColor = '#E8E8F0';
+  });
+});
+
+// Initialize
+init();
+</script>
+
+</body>
+</html>
