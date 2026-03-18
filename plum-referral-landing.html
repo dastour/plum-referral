@@ -21,7 +21,15 @@
     --text-3: #8888A8;
     --white: #FFFFFF;
     --red: #FF4757;
+    --red-bg: #FFF0F1;
     --gold: #F4A623;
+    --gold-bg: #FFF8E6;
+    --amber-t: #8B5500;
+    --blue-bg: #EBF4FF;
+    --blue-t: #1A4A7A;
+    --green-bg: #E8F8F2;
+    --green-t: #066B50;
+    --border: #E8E6E0;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -136,13 +144,10 @@
     border-radius: 12px;
   }
   .claim-hospital-icon {
-    width: 28px;
-    height: 28px;
+    width: 28px; height: 28px;
     background: var(--mint);
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
 
@@ -158,21 +163,182 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
   }
   .trust-strip-icon {
-    width: 36px;
-    height: 36px;
+    width: 36px; height: 36px;
     background: linear-gradient(135deg, var(--gold) 0%, #F0C060 100%);
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-  .trust-strip-text {
+  .trust-strip-text { font-size: 13px; color: var(--text-2); line-height: 1.4; }
+  .trust-strip-text strong { color: var(--text); }
+
+  /* === GAME SECTION === */
+  .game-section {
+    margin: 0 16px 20px;
+  }
+  .game-start-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid var(--border);
+  }
+  .game-start-card:hover { border-color: var(--plum-glow); }
+  .game-start-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .game-start-sub {
     font-size: 13px;
     color: var(--text-2);
-    line-height: 1.4;
+    line-height: 1.5;
+    margin-bottom: 12px;
   }
-  .trust-strip-text strong { color: var(--text); }
+  .game-start-btn {
+    display: inline-block;
+    background: var(--plum);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /* GAME ACTIVE */
+  .game-area { display: none; }
+  .game-area.active { display: block; }
+
+  .game-scoreboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .gscore {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 8px 4px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .gscore-val { font-size: 13px; font-weight: 700; font-family: 'Fraunces', serif; }
+  .gscore-val.gti { color: var(--amber-t); }
+  .gscore-val.gmo { color: #CC2233; }
+  .gscore-val.gst { color: var(--blue-t); }
+  .gscore-lbl { font-size: 8px; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; margin-top: 1px; }
+
+  .gscene {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 8px;
+    animation: gfu .3s ease-out;
+  }
+  @keyframes gfu { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .gscene-round { font-size: 9px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+  .gscene-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
+  .gscene-desc { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+  .gchoices { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; animation: gfu .3s ease-out .1s both; }
+  .gchoice {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: all .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .gchoice:active { transform: scale(.98); }
+  .gchoice:hover { border-color: var(--gold); background: var(--gold-bg); }
+  .gchoice-letter {
+    display: inline-flex;
+    width: 20px; height: 20px;
+    background: var(--gold-bg);
+    color: var(--amber-t);
+    font-size: 10px; font-weight: 700;
+    align-items: center; justify-content: center;
+    border-radius: 5px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .gchoice-text { font-size: 13px; font-weight: 600; vertical-align: middle; }
+  .gchoice-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; padding-left: 28px; }
+
+  .goutcome {
+    background: var(--red-bg);
+    border-left: 3px solid var(--red);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    animation: gfu .3s ease-out;
+  }
+  .goutcome-title { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .goutcome-desc { font-size: 11px; color: var(--text-2); line-height: 1.5; }
+  .gtags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .gtag { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 20px; }
+  .gtag.gti { background: var(--gold-bg); color: var(--amber-t); }
+  .gtag.gmo { background: var(--red-bg); color: #CC2233; }
+  .gtag.gst { background: var(--blue-bg); color: var(--blue-t); }
+
+  /* GAME FINAL */
+  .gfinal { background: var(--white); border-radius: 12px; padding: 16px; border: 1px solid var(--border); margin-bottom: 8px; }
+  .gfinal.bad { border-color: var(--red); }
+  .gfinal.good { border-color: var(--mint); }
+  .gfinal h4 { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .gfinal.bad h4 { color: #CC2233; }
+  .gfinal.good h4 { color: var(--green-t); }
+  .grw { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #F2F0EB; font-size: 11px; gap: 8px; }
+  .grw:last-child { border: none; }
+  .grl { color: var(--text-2); flex: 1; }
+  .grv { font-weight: 600; text-align: right; max-width: 50%; }
+  .grv.bad { color: #CC2233; }
+  .grv.good { color: var(--green-t); }
+  .gvs { text-align: center; font-size: 16px; font-weight: 700; color: var(--text-3); padding: 4px 0; }
+
+  /* === MESSAGING PILLARS (always visible) === */
+  .pillars-section {
+    margin: 0 16px 20px;
+  }
+  .pillars-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .pillar-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 8px;
+    border-left: 3px solid;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  }
+  .pillar-card.pc1 { border-color: var(--red); }
+  .pillar-card.pc2 { border-color: var(--gold); }
+  .pillar-card.pc3 { border-color: var(--mint); }
+  .pillar-card h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .pillar-card p {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
 
   /* === CTA SECTION === */
   .cta-section {
@@ -182,672 +348,384 @@
     padding: 28px 24px;
     box-shadow: 0 8px 32px rgba(91,45,142,0.08);
   }
-  .cta-headline {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.3;
-    margin-bottom: 8px;
-  }
-  .cta-sub {
-    font-size: 14px;
-    color: var(--text-2);
-    line-height: 1.5;
-    margin-bottom: 24px;
-  }
-
-  .form-group {
-    margin-bottom: 14px;
-  }
-  .form-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-2);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 6px;
-    display: block;
-  }
+  .cta-headline { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+  .cta-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; margin-bottom: 24px; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
   .form-input {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid #E8E8F0;
-    border-radius: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    color: var(--text);
-    background: var(--warm);
-    transition: border-color 0.2s;
-    outline: none;
-    -webkit-appearance: none;
+    width: 100%; padding: 14px 16px; border: 2px solid #E8E8F0; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--text); background: var(--warm);
+    transition: border-color 0.2s; outline: none; -webkit-appearance: none;
   }
-  .form-input:focus {
-    border-color: var(--plum-glow);
-    background: var(--white);
-  }
+  .form-input:focus { border-color: var(--plum-glow); background: var(--white); }
   .form-input::placeholder { color: var(--text-3); }
-
   .btn-primary {
-    width: 100%;
-    padding: 16px;
+    width: 100%; padding: 16px;
     background: linear-gradient(135deg, var(--mint-dark) 0%, var(--mint) 100%);
-    color: var(--white);
-    border: none;
-    border-radius: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-    box-shadow: 0 4px 16px rgba(0,209,156,0.3);
-    margin-top: 8px;
+    color: var(--white); border: none; border-radius: 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(0,209,156,0.3); margin-top: 8px;
   }
-  .btn-primary:active {
-    transform: scale(0.97);
-  }
-  .btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-  /* === REWARD FREEBIE BANNER === */
+  /* === FREEBIE BANNER === */
   .freebie-banner {
     margin: 0 16px 20px;
     background: linear-gradient(135deg, var(--warm-2) 0%, #FFF4E6 100%);
-    border: 2px solid var(--gold);
-    border-radius: 16px;
-    padding: 18px 20px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    border: 2px solid var(--gold); border-radius: 16px; padding: 18px 20px;
+    display: flex; align-items: flex-start; gap: 12px;
   }
-  .freebie-icon {
-    font-size: 28px;
-    flex-shrink: 0;
-    line-height: 1;
-  }
-  .freebie-text {
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1.5;
-  }
+  .freebie-icon { font-size: 28px; flex-shrink: 0; line-height: 1; }
+  .freebie-text { font-size: 14px; color: var(--text); line-height: 1.5; }
   .freebie-text strong { color: var(--plum); }
 
   /* === SPIN WHEEL === */
-  .spin-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(26,26,46,0.85);
-    z-index: 100;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(4px);
-  }
+  .spin-overlay { display:none; position:fixed; inset:0; background:rgba(26,26,46,0.85); z-index:100; justify-content:center; align-items:center; backdrop-filter:blur(4px); }
   .spin-overlay.active { display: flex; }
-
-  .spin-container {
-    background: var(--white);
-    border-radius: 24px;
-    padding: 32px 24px;
-    width: 90%;
-    max-width: 360px;
-    text-align: center;
-    animation: slideUp 0.4s ease-out;
-  }
-  @keyframes slideUp {
-    from { transform: translateY(40px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  .spin-title {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .spin-sub {
-    font-size: 13px;
-    color: var(--text-2);
-    margin-bottom: 24px;
-  }
-
-  .wheel-wrapper {
-    position: relative;
-    width: 260px;
-    height: 260px;
-    margin: 0 auto 24px;
-  }
-  .wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    position: relative;
-    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-    box-shadow: 0 4px 24px rgba(91,45,142,0.15);
-  }
-  .wheel-pointer {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 14px solid transparent;
-    border-right: 14px solid transparent;
-    border-top: 24px solid var(--plum);
-    z-index: 5;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-  }
-  .wheel-center {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 48px; height: 48px;
-    background: var(--white);
-    border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-  }
-
-  .btn-spin {
-    padding: 14px 40px;
-    background: linear-gradient(135deg, var(--plum) 0%, var(--plum-light) 100%);
-    color: var(--white);
-    border: none;
-    border-radius: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(91,45,142,0.3);
-    transition: transform 0.15s;
-  }
-  .btn-spin:active { transform: scale(0.97); }
-
-  /* === RESULT SCREEN === */
-  .result-screen {
-    display: none;
-    text-align: center;
-    padding: 20px 0;
-  }
-  .result-screen.active { display: block; }
-  .result-emoji { font-size: 56px; margin-bottom: 12px; }
-  .result-prize {
-    font-family: 'Fraunces', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--plum);
-    margin-bottom: 8px;
-  }
-  .result-note {
-    font-size: 13px;
-    color: var(--text-2);
-    line-height: 1.5;
-  }
+  .spin-container { background:var(--white); border-radius:24px; padding:32px 24px; width:90%; max-width:360px; text-align:center; animation:slideUp .4s ease-out; }
+  @keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .spin-title { font-family:'Fraunces',serif; font-size:22px; font-weight:700; margin-bottom:6px; }
+  .spin-sub { font-size:13px; color:var(--text-2); margin-bottom:24px; }
+  .wheel-wrapper { position:relative; width:260px; height:260px; margin:0 auto 24px; }
+  .wheel-pointer { position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:14px solid transparent; border-right:14px solid transparent; border-top:24px solid var(--plum); z-index:5; }
+  .wheel-center { position:absolute; top:50%;left:50%; transform:translate(-50%,-50%); width:48px;height:48px; background:var(--white); border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:3; display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .btn-spin { padding:14px 40px; background:linear-gradient(135deg,var(--plum),var(--plum-light)); color:var(--white); border:none; border-radius:14px; font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700; cursor:pointer; box-shadow:0 4px 16px rgba(91,45,142,0.3); }
+  .btn-spin:active { transform:scale(.97); }
+  .result-screen { display:none; text-align:center; padding:20px 0; }
+  .result-screen.active { display:block; }
+  .result-emoji { font-size:56px; margin-bottom:12px; }
+  .result-prize { font-family:'Fraunces',serif; font-size:20px; font-weight:700; color:var(--plum); margin-bottom:8px; }
+  .result-note { font-size:13px; color:var(--text-2); line-height:1.5; }
 
   /* === SUCCESS STATE === */
-  .success-section {
-    display: none;
-    margin: 0 16px 20px;
-    background: var(--white);
-    border-radius: 20px;
-    padding: 32px 24px;
-    text-align: center;
-    box-shadow: 0 8px 32px rgba(91,45,142,0.08);
-  }
-  .success-section.active { display: block; }
-  .success-check {
-    width: 56px; height: 56px;
-    background: var(--mint);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    font-size: 28px;
-  }
-  .success-title {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-  .success-sub {
-    font-size: 14px;
-    color: var(--text-2);
-    line-height: 1.5;
-  }
+  .success-section { display:none; margin:0 16px 20px; background:var(--white); border-radius:20px; padding:32px 24px; text-align:center; box-shadow:0 8px 32px rgba(91,45,142,0.08); }
+  .success-section.active { display:block; }
+  .success-check { width:56px;height:56px; background:var(--mint); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:28px; }
+  .success-title { font-family:'Fraunces',serif; font-size:22px; font-weight:700; margin-bottom:8px; }
+  .success-sub { font-size:14px; color:var(--text-2); line-height:1.5; }
 
-  /* === FOOTER === */
-  .footer {
-    text-align: center;
-    padding: 20px 16px 32px;
-    font-size: 11px;
-    color: var(--text-3);
-    line-height: 1.5;
-  }
-
-  /* === LOADING STATE === */
-  .loading-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 60vh;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .loading-dot {
-    width: 10px; height: 10px;
-    background: var(--plum-glow);
-    border-radius: 50%;
-    display: inline-block;
-    animation: pulse 1.2s infinite ease-in-out;
-  }
-  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes pulse {
-    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-    40% { transform: scale(1); opacity: 1; }
-  }
-
-  /* === ERROR STATE === */
-  .error-screen {
-    display: none;
-    margin: 40px 16px;
-    background: var(--white);
-    border-radius: 20px;
-    padding: 32px 24px;
-    text-align: center;
-  }
-
+  .footer { text-align:center; padding:20px 16px 32px; font-size:11px; color:var(--text-3); line-height:1.5; }
+  .loading-screen { display:flex; justify-content:center; align-items:center; min-height:60vh; flex-direction:column; gap:16px; }
+  .loading-dot { width:10px;height:10px; background:var(--plum-glow); border-radius:50%; display:inline-block; animation:pulse 1.2s infinite ease-in-out; }
+  .loading-dot:nth-child(2){animation-delay:.2s} .loading-dot:nth-child(3){animation-delay:.4s}
+  @keyframes pulse{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+  .error-screen { display:none; margin:40px 16px; background:var(--white); border-radius:20px; padding:32px 24px; text-align:center; }
   .hide { display: none !important; }
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
 <div id="loadingScreen" class="loading-screen">
-  <div>
-    <span class="loading-dot"></span>
-    <span class="loading-dot"></span>
-    <span class="loading-dot"></span>
-  </div>
-  <p style="font-size: 13px; color: var(--text-3);">Loading your friend's story...</p>
+  <div><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>
+  <p style="font-size:13px;color:var(--text-3)">Loading your friend's story...</p>
 </div>
 
-<!-- ERROR -->
 <div id="errorScreen" class="error-screen">
-  <p style="font-size: 48px; margin-bottom: 12px;">🔗</p>
-  <p style="font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px;">Link not found</p>
-  <p style="font-size: 14px; color: var(--text-2);">This referral link may have expired or is invalid. Ask your friend to share a new one.</p>
+  <p style="font-size:48px;margin-bottom:12px">&#x1f517;</p>
+  <p style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;margin-bottom:8px">Link not found</p>
+  <p style="font-size:14px;color:var(--text-2)">This referral link may have expired or is invalid. Ask your friend to share a new one.</p>
 </div>
 
-<!-- MAIN CONTENT -->
 <div id="mainContent" class="hide">
 
   <div class="header">
     <div class="header-logo">plum</div>
-    <div class="header-badge">✓ Verified Claim Story</div>
+    <div class="header-badge">&#x2713; Verified Claim Story</div>
   </div>
 
-  <!-- CLAIM STORY CARD -->
   <div class="claim-card">
     <div class="claim-card-title">A real story from</div>
     <div class="claim-card-name" id="referrerName">--</div>
     <div class="claim-stats">
-      <div class="claim-stat">
-        <div class="claim-stat-value" id="claimAmount">--</div>
-        <div class="claim-stat-label">Claim Amount</div>
-      </div>
-      <div class="claim-stat">
-        <div class="claim-stat-value mint" id="settlementTime">--</div>
-        <div class="claim-stat-label">Settled In</div>
-      </div>
+      <div class="claim-stat"><div class="claim-stat-value" id="claimAmount">--</div><div class="claim-stat-label">Claim Amount</div></div>
+      <div class="claim-stat"><div class="claim-stat-value mint" id="settlementTime">--</div><div class="claim-stat-label">Settled In</div></div>
     </div>
     <div class="claim-hospital">
-      <div class="claim-hospital-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M3 21h18M9 8h6M12 5v6M9 21V12h6v9"/></svg>
-      </div>
+      <div class="claim-hospital-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M3 21h18M9 8h6M12 5v6M9 21V12h6v9"/></svg></div>
       <span id="hospitalName">--</span>
     </div>
   </div>
 
-  <!-- TRUST STRIP -->
   <div class="trust-strip">
-    <div class="trust-strip-icon">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <div class="trust-strip-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    <div class="trust-strip-text"><strong>Plum NPS: 91+</strong> on telehealth.<br>4,500+ employers. 500K+ lives covered.</div>
+  </div>
+
+  <!-- ====== BILLING DESK GAME ====== -->
+  <div class="game-section" id="gameSection">
+    <div class="game-start-card" id="gameStartCard" onclick="startGame()">
+      <div class="game-start-title">Ever been stuck at a hospital billing desk?</div>
+      <div class="game-start-sub">See if you can get discharged in under 30 minutes. Most people can't.</div>
+      <div class="game-start-btn">Try it</div>
     </div>
-    <div class="trust-strip-text">
-      <strong>Plum NPS: 91+</strong> on telehealth.<br>4,500+ employers. 500K+ lives covered.
+    <div class="game-area" id="gameArea">
+      <div class="game-scoreboard">
+        <div class="gscore"><div class="gscore-val gti" id="gTS">0 min</div><div class="gscore-lbl">Time</div></div>
+        <div class="gscore"><div class="gscore-val gmo" id="gMS">Rs 0</div><div class="gscore-lbl">Out of pocket</div></div>
+        <div class="gscore"><div class="gscore-val gst" id="gSS">Low</div><div class="gscore-lbl">Stress</div></div>
+      </div>
+      <div id="gContent"></div>
     </div>
   </div>
 
-  <!-- FREEBIE BANNER -->
+  <!-- ====== MESSAGING PILLARS (always visible) ====== -->
+  <div class="pillars-section">
+    <div class="pillars-title">What Plum does differently</div>
+    <div class="pillar-card pc1">
+      <h4>You paid. You shouldn't have to fight for it.</h4>
+      <p>If you've paid your premiums, you deserve a settlement, not a struggle. Plum only partners with insurers who have the best track record on actually paying out.</p>
+    </div>
+    <div class="pillar-card pc2">
+      <h4>Skip the panic math.</h4>
+      <p>Plum is transparent upfront about what's covered and what's not. No surprises at the billing desk. Insurer partners are selected for settlement speed and reliability, not just price.</p>
+    </div>
+    <div class="pillar-card pc3">
+      <h4>We do the legwork, not you.</h4>
+      <p>On the day of a claim, you're already dealing with recovery. Plum's customer success team handles the insurer coordination, so you're not making calls from a hospital corridor.</p>
+    </div>
+  </div>
+
+  <!-- ====== FREEBIE + CTA ====== -->
   <div class="freebie-banner" id="freebieSection">
-    <div class="freebie-icon">🎁</div>
-    <div class="freebie-text">
-      <strong>Free health checkup worth Rs 1,299</strong> when you get a quote. 70+ tests. Takes 15 minutes. Your friend <span id="referrerFirstName">--</span> thought you should have this.
-    </div>
+    <div class="freebie-icon">&#x1f381;</div>
+    <div class="freebie-text"><strong>Free health checkup worth Rs 1,299</strong> when you get a quote. 70+ tests. Takes 15 minutes. Your friend <span id="referrerFirstName">--</span> thought you should have this.</div>
   </div>
 
-  <!-- CTA FORM -->
   <div class="cta-section" id="ctaSection">
     <div class="cta-headline">Most people your age have zero health cover.</div>
     <div class="cta-sub">See what a personal health plan costs. Takes 30 seconds. No spam, no calls unless you ask.</div>
-    <div class="form-group">
-      <label class="form-label" for="refName">Your name</label>
-      <input type="text" class="form-input" id="refName" placeholder="First name" autocomplete="given-name">
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="refPhone">Phone number</label>
-      <input type="tel" class="form-input" id="refPhone" placeholder="10-digit mobile number" autocomplete="tel" maxlength="10" inputmode="numeric" pattern="[0-9]*">
-    </div>
-    <button class="btn-primary" id="submitBtn" onclick="handleSubmit()">See My Quote →</button>
-    <p style="font-size: 11px; color: var(--text-3); text-align: center; margin-top: 12px;">By continuing, you agree to receive your quote via WhatsApp.</p>
+    <div class="form-group"><label class="form-label" for="refName">Your name</label><input type="text" class="form-input" id="refName" placeholder="First name" autocomplete="given-name"></div>
+    <div class="form-group"><label class="form-label" for="refPhone">Phone number</label><input type="tel" class="form-input" id="refPhone" placeholder="10-digit mobile number" autocomplete="tel" maxlength="10" inputmode="numeric" pattern="[0-9]*"></div>
+    <button class="btn-primary" id="submitBtn" onclick="handleSubmit()">See My Quote &#x2192;</button>
+    <p style="font-size:11px;color:var(--text-3);text-align:center;margin-top:12px">By continuing, you agree to receive your quote via WhatsApp.</p>
   </div>
 
-  <!-- SUCCESS -->
   <div class="success-section" id="successSection">
-    <div class="success-check">✓</div>
+    <div class="success-check">&#x2713;</div>
     <div class="success-title">You're in!</div>
     <div class="success-sub">Your personalized quote is on its way via WhatsApp. Your free health checkup will be activated once you choose a plan.</div>
   </div>
 
-  <div class="footer">
-    Plum Insurance Broking Pvt. Ltd. | IRDAI License No. 764<br>
-    CIN: U66000MH2019PTC321127
-  </div>
+  <div class="footer">Plum Insurance Broking Pvt. Ltd. | IRDAI License No. 764<br>CIN: U66000MH2019PTC321127</div>
 </div>
 
-<!-- SPIN THE WHEEL OVERLAY -->
+<!-- SPIN OVERLAY -->
 <div class="spin-overlay" id="spinOverlay">
   <div class="spin-container">
     <div id="spinContent">
       <div class="spin-title">You earned a spin!</div>
       <div class="spin-sub">Tap to find out what you won.</div>
-      <div class="wheel-wrapper">
-        <div class="wheel-pointer"></div>
-        <canvas id="wheelCanvas" width="260" height="260"></canvas>
-        <div class="wheel-center">🎯</div>
-      </div>
+      <div class="wheel-wrapper"><div class="wheel-pointer"></div><canvas id="wheelCanvas" width="260" height="260"></canvas><div class="wheel-center">&#x1f3af;</div></div>
       <button class="btn-spin" id="spinBtn" onclick="spinWheel()">SPIN!</button>
     </div>
     <div class="result-screen" id="resultScreen">
-      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-emoji" id="resultEmoji">&#x1f389;</div>
       <div class="result-prize" id="resultPrize">--</div>
       <div class="result-note" id="resultNote">--</div>
-      <button class="btn-primary" style="margin-top: 20px;" onclick="closeSpinOverlay()">Continue →</button>
+      <button class="btn-primary" style="margin-top:20px" onclick="closeSpinOverlay()">Continue &#x2192;</button>
     </div>
   </div>
 </div>
 
 <script>
 // ==========================================
-// CONFIGURATION
+// CONFIG
 // ==========================================
-
-// Replace this with your deployed Google Apps Script web app URL
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_kcXe325B_7dQ-ok3Ra10dyc1J8_XPvxIVaZwiUMr5mgFvEnUCDeu9-LEagIdw-1Acw/exec';
 
-// Spin probabilities (must match your spreadsheet)
 const PRIZES = [
-  { name: 'Free Telehealth Consult', prob: 0.55, emoji: '👨‍⚕️', color: '#00D09C', note: 'A free doctor consultation, redeemable anytime. Details on WhatsApp.' },
-  { name: 'Free Health Checkup', prob: 0.30, emoji: '🩺', color: '#5B2D8E', note: 'A full health checkup worth Rs 1,299 with 70+ tests. Voucher on WhatsApp.' },
-  { name: '1 Month Cultpass ELITE', prob: 0.15, emoji: '💪', color: '#F4A623', note: 'Unlimited access to gyms, yoga, swimming, and more for a full month!' },
+  { name:'Free Telehealth Consult', prob:0.55, emoji:'\u{1f468}\u200d\u2695\ufe0f', color:'#00D09C', note:'A free doctor consultation, redeemable anytime. Details on WhatsApp.' },
+  { name:'Free Health Checkup', prob:0.30, emoji:'\u{1fa7a}', color:'#5B2D8E', note:'A full health checkup worth Rs 1,299 with 70+ tests. Voucher on WhatsApp.' },
+  { name:'1 Month Cultpass ELITE', prob:0.15, emoji:'\u{1f4aa}', color:'#F4A623', note:'Unlimited access to gyms, yoga, swimming, and more for a full month!' },
 ];
 
-// ==========================================
-// STATE
-// ==========================================
 let referrerData = null;
 let referralData = {};
 let hasSpun = false;
+let gamePlayed = false;
 
 // ==========================================
-// INIT: READ URL PARAMS + FETCH REFERRER DATA
+// INIT
 // ==========================================
-
 async function init() {
   const params = new URLSearchParams(window.location.search);
   const refId = params.get('ref');
-
-  if (!refId) {
-    showError();
-    return;
-  }
-
+  if (!refId) { showError(); return; }
   try {
-    // Fetch referrer data from Google Sheets via Apps Script
-    const response = await fetch(`${APPS_SCRIPT_URL}?action=getReferrer&ref=${encodeURIComponent(refId)}`);
+    const response = await fetch(APPS_SCRIPT_URL+'?action=getReferrer&ref='+encodeURIComponent(refId));
     const data = await response.json();
-
-    if (data.error || !data.name) {
-      showError();
-      return;
-    }
-
+    if (data.error || !data.name) { showError(); return; }
     referrerData = data;
     referrerData.ref_id = refId;
     populatePage();
   } catch (err) {
-    // FALLBACK: If Apps Script is not configured, use URL params directly
-    // This allows testing without the backend
     const name = params.get('name') || 'Your Friend';
-    const amount = params.get('amount') || '1,50,000';
-    const time = params.get('time') || '27 min';
-    const hospital = params.get('hospital') || 'Apollo Hospitals';
-
-    referrerData = {
-      ref_id: refId,
-      name: name,
-      claim_amount: amount,
-      settlement_time: time,
-      hospital: hospital,
-    };
+    referrerData = { ref_id: refId, name: name, claim_amount: params.get('amount')||'1,50,000', settlement_time: params.get('time')||'27 min', hospital: params.get('hospital')||'Apollo Hospitals' };
     populatePage();
   }
 }
-
 function populatePage() {
   document.getElementById('loadingScreen').classList.add('hide');
   document.getElementById('mainContent').classList.remove('hide');
-
   document.getElementById('referrerName').textContent = referrerData.name + "'s claim was settled.";
   document.getElementById('claimAmount').textContent = 'Rs ' + referrerData.claim_amount;
   document.getElementById('settlementTime').textContent = referrerData.settlement_time;
   document.getElementById('hospitalName').textContent = referrerData.hospital;
   document.getElementById('referrerFirstName').textContent = referrerData.name.split(' ')[0];
 }
-
-function showError() {
-  document.getElementById('loadingScreen').classList.add('hide');
-  document.getElementById('errorScreen').style.display = 'block';
-}
+function showError() { document.getElementById('loadingScreen').classList.add('hide'); document.getElementById('errorScreen').style.display='block'; }
 
 // ==========================================
-// FORM SUBMISSION
+// FORM SUBMISSION (includes game_played)
 // ==========================================
-
 async function handleSubmit() {
   const name = document.getElementById('refName').value.trim();
   const phone = document.getElementById('refPhone').value.trim();
-
-  if (!name) {
-    document.getElementById('refName').style.borderColor = 'var(--red)';
-    return;
-  }
-  if (!phone || phone.length !== 10 || !/^\d{10}$/.test(phone)) {
-    document.getElementById('refPhone').style.borderColor = 'var(--red)';
-    return;
-  }
-
+  if (!name) { document.getElementById('refName').style.borderColor='var(--red)'; return; }
+  if (!phone||phone.length!==10||!/^\d{10}$/.test(phone)) { document.getElementById('refPhone').style.borderColor='var(--red)'; return; }
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Getting your quote...';
-
-  referralData = {
-    ref_id: referrerData.ref_id,
-    referrer_name: referrerData.name,
-    referred_name: name,
-    referred_phone: phone,
-    stage: 'quote_requested',
-    reward: '',
-    timestamp: new Date().toISOString(),
-  };
-
-  // Write to Google Sheet via Apps Script
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'logReferral', data: referralData }),
-    });
-  } catch (err) {
-    console.log('Sheet write attempted. If Apps Script is not set up, data logged to console:', referralData);
-  }
-
-  // Show success + spin
+  btn.disabled = true; btn.textContent = 'Getting your quote...';
+  referralData = { ref_id: referrerData.ref_id, referrer_name: referrerData.name, referred_name: name, referred_phone: phone, stage: 'quote_requested', reward: '', game_played: gamePlayed ? 'yes' : 'no', timestamp: new Date().toISOString() };
+  try { await fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'logReferral',data:referralData}) }); } catch(e) { console.log('Sheet write attempted:', referralData); }
   document.getElementById('ctaSection').classList.add('hide');
   document.getElementById('freebieSection').classList.add('hide');
   document.getElementById('successSection').classList.add('active');
-
-  // Show spin wheel after brief delay
-  setTimeout(() => {
-    drawWheel();
-    document.getElementById('spinOverlay').classList.add('active');
-  }, 1500);
+  setTimeout(() => { drawWheel(); document.getElementById('spinOverlay').classList.add('active'); }, 1500);
 }
 
 // ==========================================
 // SPIN THE WHEEL
 // ==========================================
-
 function drawWheel() {
-  const canvas = document.getElementById('wheelCanvas');
-  const ctx = canvas.getContext('2d');
-  const cx = 130, cy = 130, r = 125;
-
-  let startAngle = 0;
-  PRIZES.forEach((prize, i) => {
-    const sliceAngle = prize.prob * 2 * Math.PI;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
-    ctx.closePath();
-    ctx.fillStyle = prize.color;
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Label
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(startAngle + sliceAngle / 2);
-    ctx.fillStyle = '#fff';
-    ctx.font = '600 11px "DM Sans", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    // Wrap text
-    const words = prize.name.split(' ');
-    let line1 = '', line2 = '';
-    if (words.length <= 2) {
-      line1 = prize.name;
-    } else {
-      line1 = words.slice(0, 2).join(' ');
-      line2 = words.slice(2).join(' ');
-    }
-    const offset = r * 0.6;
-    ctx.fillText(line1, offset, line2 ? -7 : 0);
-    if (line2) ctx.fillText(line2, offset, 9);
-    ctx.restore();
-
-    startAngle += sliceAngle;
+  const canvas=document.getElementById('wheelCanvas'), ctx=canvas.getContext('2d'), cx=130,cy=130,r=125;
+  let sa=0;
+  PRIZES.forEach(p => {
+    const a=p.prob*2*Math.PI; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,sa,sa+a); ctx.closePath(); ctx.fillStyle=p.color; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(sa+a/2); ctx.fillStyle='#fff'; ctx.font='600 11px "DM Sans",sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    const w=p.name.split(' '); let l1='',l2=''; if(w.length<=2){l1=p.name}else{l1=w.slice(0,2).join(' ');l2=w.slice(2).join(' ')} const o=r*0.6; ctx.fillText(l1,o,l2?-7:0); if(l2)ctx.fillText(l2,o,9);
+    ctx.restore(); sa+=a;
   });
 }
-
 function spinWheel() {
-  if (hasSpun) return;
-  hasSpun = true;
-
-  document.getElementById('spinBtn').disabled = true;
-  document.getElementById('spinBtn').textContent = 'Spinning...';
-
-  // Determine prize
-  const rand = Math.random();
-  let cumulative = 0;
-  let winIndex = 0;
-  for (let i = 0; i < PRIZES.length; i++) {
-    cumulative += PRIZES[i].prob;
-    if (rand <= cumulative) { winIndex = i; break; }
-  }
-
-  const prize = PRIZES[winIndex];
-
-  // Calculate rotation to land on the winning slice
-  // The pointer is at top (270 degrees / 1.5*PI)
-  // We need the middle of the winning slice to align with the pointer
-  let sliceStart = 0;
-  for (let i = 0; i < winIndex; i++) sliceStart += PRIZES[i].prob;
-  const sliceMid = sliceStart + prize.prob / 2;
-  const targetAngle = (1 - sliceMid) * 360; // Degrees from top, clockwise
-  const totalRotation = 360 * 8 + targetAngle; // 8 full rotations + landing
-
-  const canvas = document.getElementById('wheelCanvas');
-  canvas.style.transform = `rotate(${totalRotation}deg)`;
-
-  // After spin completes
-  setTimeout(() => {
+  if(hasSpun)return; hasSpun=true;
+  document.getElementById('spinBtn').disabled=true; document.getElementById('spinBtn').textContent='Spinning...';
+  const rand=Math.random(); let cum=0, wi=0;
+  for(let i=0;i<PRIZES.length;i++){cum+=PRIZES[i].prob;if(rand<=cum){wi=i;break;}}
+  const prize=PRIZES[wi]; let ss=0; for(let i=0;i<wi;i++)ss+=PRIZES[i].prob;
+  const sm=ss+prize.prob/2, ta=(1-sm)*360, tr=360*8+ta;
+  document.getElementById('wheelCanvas').style.transform='rotate('+tr+'deg)';
+  document.getElementById('wheelCanvas').style.transition='transform 4s cubic-bezier(0.17,0.67,0.12,0.99)';
+  setTimeout(()=>{
     document.getElementById('spinContent').classList.add('hide');
-    const result = document.getElementById('resultScreen');
-    result.classList.add('active');
-    document.getElementById('resultEmoji').textContent = prize.emoji;
-    document.getElementById('resultPrize').textContent = 'You won: ' + prize.name + '!';
-    document.getElementById('resultNote').textContent = prize.note;
-
-    // Update referral data with reward
-    referralData.reward = prize.name;
-
-    // Write reward to Google Sheet
-    try {
-      fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'logReward', data: referralData }),
-      });
-    } catch (err) {
-      console.log('Reward logged to console:', referralData);
-    }
-  }, 4200);
+    const r=document.getElementById('resultScreen'); r.classList.add('active');
+    document.getElementById('resultEmoji').textContent=prize.emoji; document.getElementById('resultPrize').textContent='You won: '+prize.name+'!'; document.getElementById('resultNote').textContent=prize.note;
+    referralData.reward=prize.name;
+    try{fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logReward',data:referralData})})}catch(e){}
+  },4200);
 }
-
-function closeSpinOverlay() {
-  document.getElementById('spinOverlay').classList.remove('active');
-}
+function closeSpinOverlay(){document.getElementById('spinOverlay').classList.remove('active')}
 
 // ==========================================
-// PHONE INPUT: numbers only
+// BILLING DESK GAME (compact, embedded)
+// ==========================================
+const G = { time:0, money:0, stress:0, calls:0, people:0, emo:'' };
+const SL = ['Low','Rising','High','Panic','Breaking'];
+
+function gUp() {
+  document.getElementById('gTS').textContent = G.time>=60?(G.time/60).toFixed(1)+' hrs':G.time+' min';
+  document.getElementById('gMS').textContent = G.money>0?'Rs '+G.money.toLocaleString('en-IN'):'Rs 0';
+  document.getElementById('gSS').textContent = SL[Math.min(G.stress,4)];
+}
+function gScene(r,t,d) {
+  const e=document.createElement('div'); e.className='gscene';
+  e.innerHTML='<div class="gscene-round">'+r+'</div><div class="gscene-title">'+t+'</div><div class="gscene-desc">'+d+'</div>';
+  document.getElementById('gContent').appendChild(e); e.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function gOut(t,d,c) {
+  const e=document.createElement('div'); e.className='goutcome';
+  e.innerHTML='<div class="goutcome-title">'+t+'</div><div class="goutcome-desc">'+d+'</div><div class="gtags">'+c.map(x=>'<span class="gtag '+x.t+'">'+x.s+'</span>').join('')+'</div>';
+  document.getElementById('gContent').appendChild(e); e.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function gChoices(arr) {
+  const d=document.createElement('div'); d.className='gchoices';
+  'ABCDEF'.split('').slice(0,arr.length).forEach((L,i)=>{
+    const b=document.createElement('button'); b.className='gchoice';
+    b.innerHTML='<span class="gchoice-letter">'+L+'</span><span class="gchoice-text">'+arr[i].t+'</span>'+(arr[i].s?'<div class="gchoice-sub">'+arr[i].s+'</div>':'');
+    b.onclick=()=>{ d.querySelectorAll('.gchoice').forEach(x=>{x.style.opacity='.3';x.style.pointerEvents='none'}); b.style.opacity='1';b.style.borderColor='var(--gold)';b.style.background='var(--gold-bg)'; setTimeout(arr[i].f,300); };
+    d.appendChild(b);
+  });
+  document.getElementById('gContent').appendChild(d); d.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function gEnd() {
+  const gc = document.getElementById('gContent');
+  const ft = G.time>=60?(G.time/60).toFixed(1)+' hours':G.time+' min';
+  const fm = G.money>0?'Rs '+G.money.toLocaleString('en-IN'):'Rs 0 (reimbursement pending)';
+  gc.innerHTML += '<div class="gfinal bad"><h4>Your result</h4><div class="grw"><span class="grl">Time post-discharge</span><span class="grv bad">'+ft+'</span></div><div class="grw"><span class="grl">Out of pocket</span><span class="grv bad">'+fm+'</span></div><div class="grw"><span class="grl">Calls made</span><span class="grv bad">'+G.calls+'</span></div><div class="grw"><span class="grl">How it felt</span><span class="grv bad">'+G.emo+'</span></div></div>';
+  gc.innerHTML += '<div class="gvs">vs.</div>';
+  gc.innerHTML += '<div class="gfinal good"><h4>With Plum</h4><div class="grw"><span class="grl">Time at billing</span><span class="grv good">Walked out</span></div><div class="grw"><span class="grl">Calls you made</span><span class="grv good">0</span></div><div class="grw"><span class="grl">Who handled it</span><span class="grv good">Plum customer success</span></div><div class="grw"><span class="grl">You focused on</span><span class="grv good">Recovery</span></div></div>';
+  gc.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function startGame() {
+  gamePlayed = true;
+  document.getElementById('gameStartCard').classList.add('hide');
+  document.getElementById('gameArea').classList.add('active');
+  gScene('The situation','Someone in your immediate family just had a procedure. Doctor has cleared discharge.','You\'re at the billing desk. Total bill: Rs 2,40,000. You have health insurance. The TPA desk says "cashless claim is under review." Bags packed, ready to leave. But you can\'t.');
+  G.time=45;G.stress=1;G.people=1;gUp();
+  setTimeout(()=>{
+    gScene('Round 1','45 minutes. No update.','TPA desk says "insurer hasn\'t responded yet." Other patients walk out. You\'re not.');
+    gChoices([
+      {t:'Call the insurer yourself',s:'Take matters into your own hands.',f:pA},
+      {t:'Ask the hospital desk to push harder',s:'Maybe they can escalate.',f:pB},
+      {t:'Pay the full bill and leave',s:'Deal with the claim later.',f:pC}
+    ]);
+  },500);
+}
+
+function pA(){G.time=57;G.calls=1;G.people=2;G.stress=2;gUp();gOut('12 min on hold. "Waiting for hospital to upload documents."','Hospital says uploaded. Insurer says not received. Nobody owns the problem.',[{t:'gti',s:'+12 min hold'},{t:'gst',s:'He-said she-said'}]);setTimeout(()=>{gScene('Round 2','Call back after an hour. New agent.','No context. Explain from scratch. Hold again.');G.time=120;G.calls=2;G.people=3;gUp();gChoices([{t:'Demand a supervisor',s:'Two hours in. Escalate.',f:pA1},{t:'Go to TPA desk in person',s:'Forget the phone.',f:pA2}])},700)}
+
+function pA1(){G.time=150;G.calls=3;G.people=4;G.stress=3;gUp();gOut('Supervisor: wrong billing code from hospital.','Go back to TPA desk. Explain code issue. Wait for resubmission and re-approval.',[{t:'gti',s:'2.5 hrs'},{t:'gst',s:'Doing insurer\'s job'}]);setTimeout(()=>{gScene('Round 3','Relay code issue to hospital desk.','TPA person squints at screen. Types. Waits.');gChoices([{t:'Wait for the fix',s:'See it through.',f:pA1a},{t:'Hospital disagrees',s:'Stalemate.',f:pA1b}])},700)}
+
+function pA1a(){G.time=195;G.calls=3;G.people=5;G.stress=3;G.money=15000;G.emo='Exhausted. Angry it took this long.';gUp();gOut('Fixed. Approved 45 min later.','Cashless goes through. Pay non-covered items. Over 3 hours after clearance.',[{t:'gti',s:'3 hrs 15 min'},{t:'gmo',s:'Rs 15K non-covered'}]);setTimeout(gEnd,800)}
+
+function pA1b(){G.time=210;G.calls=4;G.people=6;G.stress=4;G.money=240000;G.emo='Betrayed. Paid premiums for years.';gUp();gOut('Stalemate. 3.5 hours. Pay full bill to leave.','File reimbursement later. 15-30 days. No guarantee.',[{t:'gti',s:'3.5 hrs'},{t:'gmo',s:'Rs 2,40,000 upfront'}]);setTimeout(gEnd,800)}
+
+function pA2(){G.time=135;G.calls=2;G.people=4;G.stress=2;gUp();gOut('TPA desk handling 3 others. You wait.','Your turn: "pending with insurer." Offer to "escalate" somehow.',[{t:'gti',s:'2 hrs'},{t:'gst',s:'No timeline'}]);setTimeout(()=>{gScene('Round 3','Another hour. Still pending.','Checked 4 times. Desk person avoids eye contact.');gChoices([{t:'Keep waiting',s:'Has to come through.',f:pA2a},{t:'Pay and leave',s:'Can\'t do this anymore.',f:pA2b}])},700)}
+
+function pA2a(){G.time=240;G.calls=2;G.people=5;G.stress=3;G.money=16000;G.emo='Numb. 4 hours vanished.';gUp();gOut('Approved after 4 hours. No explanation.','Pay non-covered items. Half a day gone.',[{t:'gti',s:'4 hours'},{t:'gmo',s:'Rs 16K non-covered'}]);setTimeout(gEnd,800)}
+
+function pA2b(){G.time=140;G.calls=2;G.people=4;G.stress=3;G.money=240000;G.emo='Defeated. System wore you down.';gUp();gOut('Rs 2,40,000 paid. Paperwork chase begins.','Submit within 15 days. Wait 15-30 days. Recovery: 70-85%.',[{t:'gti',s:'2+ hrs'},{t:'gmo',s:'Rs 2,40,000 upfront'}]);setTimeout(gEnd,800)}
+
+function pB(){G.time=90;G.people=2;G.stress=1;gUp();gOut('"Already escalated." Shows portal: pending.','Suggest calling insurer directly. Back to square one.',[{t:'gti',s:'1.5 hrs loop'},{t:'gst',s:'Circular'}]);setTimeout(()=>{gScene('Round 2','The circular loop.','Hospital points to insurer. Insurer will point to hospital.');gChoices([{t:'Call insurer with specific ask',s:'"What exactly is missing?"',f:pB1},{t:'Threaten IRDAI complaint',s:'Maybe the regulator helps.',f:pB2},{t:'Give up and pay',s:'Done.',f:pB3}])},700)}
+
+function pB1(){G.time=150;G.calls=1;G.people=3;G.stress=2;gUp();gOut('Missing doctor\'s signature on discharge summary.','Find doctor. Get signature. Bring back. Resubmit. Doctor doing rounds, 30-45 min.',[{t:'gti',s:'2.5 hrs'},{t:'gst',s:'Coordinating 3 parties'}]);setTimeout(()=>{gScene('Round 3','Chasing the doctor.','Outside doctor\'s cabin, different floor. "10 more minutes."');gChoices([{t:'Wait for doctor',s:'They\'ll come out eventually.',f:pB1a},{t:'Pay and leave',s:'Nearly 3 hours.',f:pB1b}])},700)}
+
+function pB1a(){G.time=230;G.calls=2;G.people=6;G.stress=3;G.money=15000;G.emo='Wrung out. Marathon inside a hospital.';gUp();gOut('Doctor signs. Resubmitted. Approved 30 min later.','3 hrs 50 min. 2 km walked inside the hospital.',[{t:'gti',s:'3 hrs 50 min'},{t:'gmo',s:'Rs 15K non-covered'}]);setTimeout(gEnd,800)}
+
+function pB1b(){G.time=170;G.calls=1;G.people=4;G.stress=3;G.money=240000;G.emo='So close. System wouldn\'t let you finish.';gUp();gOut('Rs 2,40,000 paid. Out in 15 min of deciding.','Reimbursement journey ahead.',[{t:'gti',s:'2 hrs 50 min'},{t:'gmo',s:'Rs 2,40,000 upfront'}]);setTimeout(gEnd,800)}
+
+function pB2(){G.time=130;G.calls=1;G.people=3;G.stress=3;gUp();gOut('"Welcome to file a complaint." Portal URL. Nothing changes.','IRDAI: 15-30 days. Valid later. Useless now.',[{t:'gti',s:'2 hrs'},{t:'gst',s:'Nuclear = no effect today'}]);setTimeout(()=>{gScene('Round 3','One option left.','Insurer won\'t move. Hospital can\'t. Regulator is 30 days.');gChoices([{t:'Pay. File IRDAI tonight.',s:'Leave now. Fight later.',f:pB2e}])},700)}
+
+function pB2e(){G.time=140;G.calls=2;G.people=4;G.stress=4;G.money=80000;G.emo='Won 45 days later. Lost that evening.';gUp();gOut('Paid. IRDAI complaint. Partial refund after 45 days.','Rs 80,000 permanent loss. 45 days of appeals.',[{t:'gti',s:'2 hrs + 45 days'},{t:'gmo',s:'Rs 80K permanent'}]);setTimeout(gEnd,800)}
+
+function pB3(){G.time=100;G.people=2;G.stress=2;G.money=240000;G.emo='Paid for insurance that didn\'t work.';gUp();gOut('Full bill paid. Out in 10 min.','Quick exit. Rs 2,40,000 gone.',[{t:'gti',s:'1 hr 40 min'},{t:'gmo',s:'Rs 2,40,000'}]);setTimeout(gEnd,800)}
+
+function pC(){G.time=60;G.people=1;G.stress=2;G.money=240000;gUp();gOut('Rs 2,40,000 paid. Out in 15 min.','Fastest exit. Reimbursement starts tomorrow.',[{t:'gti',s:'1 hr'},{t:'gmo',s:'Rs 2,40,000 gone'}]);setTimeout(()=>{gScene('Aftermath','The reimbursement trail.','Every original bill, discharge summary, prescriptions, claim form. Submit within 15 days.');gChoices([{t:'File immediately, all docs ready',s:'Organized. Kept everything.',f:pC1},{t:'File late, missing docs',s:'Life gets in the way.',f:pC2}])},700)}
+
+function pC1(){G.time=60;G.calls=1;G.people=1;G.stress=2;G.money=43000;G.emo='Navigated it. Shouldn\'t have had to.';gUp();gOut('Filed Day 3. Settled Day 28 at 82%.','Rs 43,000 permanent loss. 5 hours over 4 weeks.',[{t:'gti',s:'1 hr + 4 weeks'},{t:'gmo',s:'Rs 43K permanent'}]);setTimeout(gEnd,800)}
+
+function pC2(){G.time=60;G.calls=2;G.people=2;G.stress=3;G.money=84000;G.emo='System punished you for being human.';gUp();gOut('Filed Day 13, missing receipts. Settled at 65%.','Rs 84,000 permanent. Hospital "can\'t reissue."',[{t:'gti',s:'1 hr + weeks'},{t:'gmo',s:'Rs 84K permanent'}]);setTimeout(gEnd,800)}
+
+// ==========================================
+// PHONE INPUT
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('refPhone').addEventListener('input', function(e) {
-    this.value = this.value.replace(/\D/g, '').slice(0, 10);
-    this.style.borderColor = '#E8E8F0';
-  });
-  document.getElementById('refName').addEventListener('input', function() {
-    this.style.borderColor = '#E8E8F0';
-  });
+  document.getElementById('refPhone').addEventListener('input', function() { this.value=this.value.replace(/\D/g,'').slice(0,10); this.style.borderColor='#E8E8F0'; });
+  document.getElementById('refName').addEventListener('input', function() { this.style.borderColor='#E8E8F0'; });
 });
 
-// Initialize
 init();
 </script>
-
 </body>
 </html>
