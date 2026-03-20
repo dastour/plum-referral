@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Plum Personal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS VARIABLES & RESET
+   ============================================================ */
+:root {
+  --bg: #0a0c10;
+  --surface: #12151c;
+  --surface2: #1a1e28;
+  --border: #1f2533;
+  --plum: #7c3aed;
+  --plum-soft: rgba(124,58,237,0.12);
+  --plum-glow: rgba(124,58,237,0.25);
+  --green: #22c55e;
+  --green-soft: rgba(34,197,94,0.1);
+  --gold: #fbbf24;
+  --gold-soft: rgba(251,191,36,0.1);
+  --present: #eab308;
+  --absent: #1f2533;
+  --coral: #f87171;
+  --text: #eef0f4;
+  --muted: #6b7280;
+  --muted2: #4b5563;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+a{color:var(--plum);text-decoration:none}
+
+/* ============================================================
+   SHARED UTILITIES
+   ============================================================ */
+.container{max-width:460px;margin:0 auto;padding:0 16px}
+.hidden{display:none!important}
+.btn-primary{background:linear-gradient(135deg,var(--plum),#6d28d9);color:#fff;border:none;padding:14px 28px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%}
+.btn-primary:active{transform:scale(0.97)}
+.btn-ghost{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-ghost:active{transform:scale(0.97)}
+.btn-wa{background:#25D366;color:#fff;border:none;padding:10px 18px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s}
+.btn-wa:active{transform:scale(0.97)}
+
+/* Toast */
+#globalToast{position:fixed;top:10%;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 20px;border-radius:8px;font-weight:700;font-size:13px;opacity:0;transition:opacity 0.2s;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);pointer-events:none}
+#globalToast.show{opacity:1}
+
+/* ============================================================
+   LOGIN SCREEN
+   ============================================================ */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.login-card{max-width:380px;width:100%;text-align:center}
+.login-logo{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--plum),var(--green));display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#fff;margin:0 auto 20px}
+.login-title{font-size:22px;font-weight:800;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:28px}
+.form-field{margin-bottom:14px;text-align:left}
+.form-field label{display:block;font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.form-field input{width:100%;padding:13px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s}
+.form-field input::placeholder{color:var(--muted2)}
+.form-field input:focus{border-color:var(--plum)}
+.login-footer{margin-top:16px;font-size:11px;color:var(--muted2);line-height:1.5}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+#loadingScreen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--plum);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============================================================
+   APP SHELL (after login)
+   ============================================================ */
+#appShell{display:none;padding-bottom:72px}
+
+/* Top bar */
+.top-bar{padding:14px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--plum),var(--green));display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#fff}
+.tb-title{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:1px}
+.coins-pill{display:flex;align-items:center;gap:6px;background:var(--gold-soft);border:1px solid rgba(251,191,36,0.2);padding:6px 14px;border-radius:20px;cursor:default;position:relative}
+.coins-pill .coin-icon{width:18px;height:18px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--bg)}
+.coins-pill .coin-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--gold)}
+.coins-tooltip{position:absolute;top:calc(100% + 8px);right:0;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted);width:200px;opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.coins-pill:hover .coins-tooltip{opacity:1}
+
+/* Greeting */
+.greeting{padding:8px 0 16px}
+.greeting-hi{font-size:13px;color:var(--muted)}
+.greeting-name{font-size:20px;font-weight:800;margin-top:2px}
+.greeting-name em{font-style:italic;color:var(--plum);font-weight:700}
+.greeting-copy{font-size:12px;color:var(--muted);line-height:1.55;margin-top:8px;max-width:380px}
+
+/* Tab navigation */
+.tab-nav{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;padding:9px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px}
+.tab-btn.active{background:var(--plum);border-color:var(--plum);color:#fff}
+.tab-btn:active{transform:scale(0.96)}
+
+/* Tab content */
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============================================================
+   HOME TAB
+   ============================================================ */
+.home-cards{display:flex;flex-direction:column;gap:12px}
+.home-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:16px}
+.home-card:active{transform:scale(0.98)}
+.home-card:hover{border-color:rgba(255,255,255,0.1)}
+.hc-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.hc-icon.wordle{background:linear-gradient(135deg,var(--plum-soft),var(--green-soft))}
+.hc-icon.bingo{background:linear-gradient(135deg,rgba(248,113,113,0.1),var(--gold-soft))}
+.hc-icon.perks{background:linear-gradient(135deg,var(--gold-soft),var(--green-soft))}
+.hc-body{flex:1}
+.hc-title{font-size:14px;font-weight:700;margin-bottom:2px}
+.hc-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.hc-arrow{color:var(--muted);font-size:18px}
+.hc-badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.8px;margin-top:4px;display:inline-block}
+.hc-badge.coins{background:var(--gold-soft);color:var(--gold)}
+.hc-badge.done{background:var(--green-soft);color:var(--green)}
+
+/* Quote CTA */
+.quote-section{margin-top:20px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;text-align:center}
+.quote-section h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.quote-section p{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.quote-btns{display:flex;gap:10px}
+.quote-btns button{flex:1}
+
+/* ============================================================
+   QUOTE FORM MODAL
+   ============================================================ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
+.modal-overlay.show{display:flex}
+.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:28px 20px 36px;width:100%;max-width:460px;animation:slideUp 0.3s ease;max-height:90vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-sheet h2{font-size:17px;font-weight:800;margin-bottom:4px}
+.modal-sheet .ms-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
+.check-row{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer}
+.check-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.check-box.on{background:var(--plum);border-color:var(--plum)}
+.check-box svg{width:14px;height:14px;stroke:#fff;stroke-width:2.5;fill:none;opacity:0;transition:opacity 0.2s}
+.check-box.on svg{opacity:1}
+.check-label{font-size:13px;font-weight:500}
+.success-banner{text-align:center;padding:24px 0 8px}
+.success-banner .sb-emoji{font-size:40px;margin-bottom:10px}
+.success-banner .sb-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.success-banner .sb-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* ============================================================
+   WORDLE TAB
+   ============================================================ */
+.wordle-wrap{display:flex;flex-direction:column;align-items:center}
+/* Rewards track */
+.w-rewards{width:100%;margin-bottom:10px}
+.w-track-bar{position:relative;height:6px;border-radius:3px;background:var(--border);overflow:visible}
+.w-track-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--plum),var(--green));transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 0 10px var(--plum-glow)}
+.w-track-markers{position:absolute;top:0;left:0;right:0;height:100%}
+.w-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:var(--border);border:2px solid var(--bg);transition:all 0.4s;cursor:pointer;z-index:2}
+.w-dot.hit{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.5)}
+.w-dot .w-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) scale(0.9);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;white-space:nowrap;font-size:10px;opacity:0;pointer-events:none;transition:all 0.2s;z-index:100;box-shadow:0 6px 20px rgba(0,0,0,0.5)}
+.w-dot:hover .w-tip{opacity:1;transform:translateX(-50%) scale(1)}
+.w-tip-t{color:var(--gold);font-weight:700}.w-tip-s{margin-top:3px;font-size:9px;text-transform:uppercase;letter-spacing:0.8px}
+.w-tip-s.locked{color:var(--coral)}.w-tip-s.unlocked{color:var(--green)}
+.w-labels{display:flex;position:relative;height:14px;margin-top:3px}
+.w-lbl{font-size:8px;color:var(--muted);position:absolute;transform:translateX(-50%)}
+/* Board */
+.w-board{display:grid;gap:4px;padding:6px 0}
+.w-row{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.w-tile{width:52px;height:52px;border:2px solid var(--border);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center;text-transform:uppercase;background:transparent;color:var(--text);transition:border-color 0.15s}
+.w-tile.tbd{border-color:rgba(255,255,255,0.15)}
+.w-tile.correct{background:var(--green);border-color:var(--green);color:#fff}
+.w-tile.present{background:var(--present);border-color:var(--present);color:#000}
+.w-tile.absent{background:var(--absent);border-color:var(--absent);color:var(--muted)}
+.w-tile.pop{animation:wpop 0.1s}
+.w-tile.flip{animation:wflip 0.5s ease forwards}
+@keyframes wpop{50%{transform:scale(1.08)}}
+@keyframes wflip{0%{transform:rotateX(0)}50%{transform:rotateX(-90deg)}100%{transform:rotateX(0)}}
+/* Keyboard */
+.w-kb{width:100%;max-width:460px;padding:4px 0}
+.w-kb-row{display:flex;justify-content:center;margin:0 auto 5px;gap:4px}
+.w-key{height:48px;min-width:32px;border:none;border-radius:5px;background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;transition:all 0.12s}
+.w-key:active{transform:scale(0.94)}
+.w-key.big{min-width:52px;font-size:10px}
+.w-key.correct{background:var(--green);color:#fff}
+.w-key.present{background:var(--present);color:#000}
+.w-key.absent{background:rgba(31,37,51,0.5);color:var(--muted)}
+.w-info{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+.w-info span{font-family:'JetBrains Mono',monospace;color:var(--plum)}
+/* Wordle modal */
+.w-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);justify-content:center;align-items:center;z-index:1000}
+.w-modal.show{display:flex}
+.w-modal-box{background:var(--surface);padding:28px 24px;border-radius:14px;text-align:center;max-width:360px;width:90%;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5)}
+.w-modal-box h2{font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:0.8px}
+.wm-word{font-family:'JetBrains Mono',monospace;font-size:26px;margin:8px 0;font-weight:700}
+.wm-word.won{color:var(--green)}.wm-word.lost{color:var(--present)}
+.wm-stats{display:flex;justify-content:center;gap:16px;margin:14px 0}
+.wm-stat{text-align:center}
+.wm-stat b{display:block;font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.wm-stat span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.wm-nudge{margin:10px 0 4px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid var(--border);font-size:11px;color:var(--muted);display:none}
+.wm-nudge.show{display:block}
+.wm-reward{display:none;margin:12px 0 6px;padding:14px;border-radius:10px;background:linear-gradient(135deg,var(--plum-soft),var(--green-soft));border:1px solid rgba(124,58,237,0.2)}
+.wm-reward.show{display:block;animation:wmpulse 1.6s ease infinite}
+@keyframes wmpulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 20px var(--plum-soft)}}
+.wm-r-title{font-size:13px;font-weight:700;color:var(--gold);margin:4px 0}
+.wm-r-desc{font-size:11px;color:var(--muted)}
+/* Trophy */
+.w-trophy-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);justify-content:center;align-items:center;z-index:1000}
+.w-trophy-modal.show{display:flex}
+.w-trophy-box{background:var(--surface);padding:24px 20px;border-radius:14px;max-width:380px;width:90%;border:1px solid var(--border);max-height:85vh;overflow-y:auto}
+.wt-header{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;text-align:center;margin-bottom:14px}
+.wt-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.02);margin-bottom:8px}
+.wt-item.unlocked{border-color:rgba(34,197,94,0.2);background:rgba(34,197,94,0.03)}
+.wt-item.locked{opacity:0.4}
+.wt-emoji{font-size:20px;flex-shrink:0}
+.wt-body{flex:1}
+.wt-name{font-size:12px;font-weight:700}
+.wt-desc{font-size:10px;color:var(--muted);margin-top:1px}
+.wt-meta{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap}
+.wt-badge{font-size:8px;text-transform:uppercase;letter-spacing:0.8px;padding:2px 7px;border-radius:4px;font-weight:700}
+.wt-badge.won{background:rgba(34,197,94,0.15);color:var(--green)}
+.wt-badge.not{background:rgba(248,113,113,0.1);color:var(--coral)}
+/* Done */
+.w-done{text-align:center;padding:40px 0}
+.w-done-emoji{font-size:44px;margin-bottom:10px}
+.w-done-title{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700}
+.w-done-sub{font-size:13px;color:var(--muted);margin:8px 0 16px;line-height:1.5}
+
+/* ============================================================
+   BINGO TAB
+   ============================================================ */
+.bingo-wrap{max-width:400px;margin:0 auto}
+.b-header{text-align:center;margin-bottom:12px}
+.b-badge{display:inline-block;font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);background:var(--green-soft);padding:5px 12px;border-radius:20px;margin-bottom:10px}
+.b-header h2{font-size:22px;font-weight:800;margin-bottom:4px}
+.b-header p{font-size:12px;color:var(--muted)}
+.b-score{text-align:center;margin-bottom:14px}
+.b-score-pill{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--green);background:var(--green-soft);padding:5px 18px;border-radius:20px;display:inline-block}
+.b-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.b-cell{position:relative;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:16px 10px;text-align:center;cursor:pointer;transition:all 0.25s;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.b-cell:active{transform:scale(0.96)}
+.b-cell .b-emoji{font-size:24px;transition:transform 0.3s}
+.b-cell .b-text{font-size:10px;font-weight:500;color:var(--muted);line-height:1.3}
+.b-cell.checked{background:var(--green-soft);border-color:var(--green)}
+.b-cell.checked .b-emoji{transform:scale(1.1)}
+.b-cell.checked .b-text{color:var(--green);font-weight:600}
+.b-cell .b-check{position:absolute;top:6px;right:6px;width:18px;height:18px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0.5);transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.b-cell.checked .b-check{opacity:1;transform:scale(1)}
+.b-check svg{width:10px;height:10px;stroke:var(--bg);stroke-width:3;fill:none}
+.b-gen-btn{width:100%;padding:16px;background:var(--green);color:var(--bg);font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:14px;cursor:pointer;transition:all 0.2s;display:none}
+.b-gen-btn.visible{display:block}
+.b-gen-btn:active{transform:scale(0.98)}
+/* Gender selector for bingo */
+.b-gender{text-align:center;margin-bottom:14px}
+.b-gender-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.b-gender-opts{display:flex;gap:8px;justify-content:center}
+.b-g-opt{padding:8px 20px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s}
+.b-g-opt.selected{background:var(--green-soft);border-color:var(--green);color:var(--green);font-weight:600}
+/* Nudge */
+.b-nudge{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 18px;max-width:320px;width:calc(100% - 32px);text-align:center;opacity:0;pointer-events:none;transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);z-index:50;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.b-nudge.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.b-nudge-char{font-size:12px;font-weight:600;color:var(--gold)}
+.b-nudge-line{font-size:11px;color:var(--muted);font-style:italic}
+/* Result */
+.b-result{display:none;animation:fadeIn 0.4s ease}
+.b-result.show{display:block}
+.b-persona{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px 20px;text-align:center;position:relative;overflow:hidden}
+.b-persona::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,var(--green-soft) 0%,transparent 60%);pointer-events:none}
+.bp-score{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--green);background:var(--green-soft);padding:4px 14px;border-radius:20px;margin-bottom:12px;position:relative}
+.bp-user{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);position:relative}
+.bp-title{font-size:24px;font-weight:800;margin:4px 0;position:relative}
+.bp-char{font-size:14px;font-weight:600;color:var(--gold);margin-bottom:12px;position:relative}
+.bp-badges{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;position:relative}
+.bp-badge{font-size:9px;font-weight:600;padding:3px 10px;border-radius:20px}
+.bp-badge.w{background:rgba(96,165,250,0.1);color:#60a5fa}
+.bp-badge.p{background:rgba(248,113,113,0.1);color:#f87171}
+.bp-badge.r{background:rgba(167,139,250,0.1);color:#a78bfa}
+.bp-cardline{font-size:14px;font-weight:500;font-style:italic;line-height:1.5;margin-bottom:16px;position:relative}
+.bp-desc{font-size:12px;color:var(--muted);line-height:1.6;text-align:left;position:relative}
+.b-share{margin-top:20px;text-align:center}
+.b-share h3{font-size:14px;font-weight:700;margin-bottom:10px}
+.b-plum-nudge{margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.b-plum-nudge p{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.b-play-again{margin-top:12px;text-align:center}
+.b-play-again button{background:none;border:none;color:var(--muted2);font-size:12px;cursor:pointer;text-decoration:underline;padding:8px}
+
+/* ============================================================
+   PERKS TAB
+   ============================================================ */
+.perks-wrap{max-width:440px;margin:0 auto}
+.p-wallet{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:16px;position:relative;overflow:hidden}
+.p-wallet::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,var(--gold-soft),transparent 70%);pointer-events:none}
+.p-wallet-label{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.p-wallet-row{display:flex;align-items:baseline;gap:8px}
+.p-wallet-bal{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;color:var(--gold);line-height:1;transition:all 0.3s}
+.p-wallet-unit{font-size:13px;font-weight:600;color:var(--muted)}
+.p-wallet-sub{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4}
+.p-wallet-sub strong{color:var(--gold)}
+.p-filters{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.p-filters::-webkit-scrollbar{display:none}
+.p-fbtn{flex-shrink:0;padding:7px 14px;border-radius:18px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.p-fbtn.active{background:var(--plum);border-color:var(--plum);color:#fff}
+.p-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.p-card{perspective:800px;height:190px;cursor:pointer}
+.p-card.activated{cursor:default}
+.p-inner{position:relative;width:100%;height:100%;transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);transform-style:preserve-3d}
+.p-card.flipped .p-inner{transform:rotateY(180deg)}
+.p-front,.p-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;overflow:hidden}
+.p-front{background:var(--surface);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 12px;text-align:center}
+.p-logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#fff;margin-bottom:10px}
+.p-brand{font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.p-offer{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;line-height:1.2;margin-bottom:3px}
+.p-pdesc{font-size:10px;color:var(--muted)}
+.p-cost{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:9px;font-weight:600;color:var(--gold)}
+.p-cost .pc{width:12px;height:12px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--bg);font-weight:800}
+.p-back{background:var(--surface);border:1px solid var(--green);transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 12px;text-align:center}
+.p-back .pb-icon{width:32px;height:32px;background:rgba(34,197,94,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.p-back .pb-icon svg{width:16px;height:16px;stroke:var(--green);stroke-width:2.5;fill:none}
+.p-back .pb-label{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+.p-back .pb-brand{font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.p-back .pb-offer{font-size:11px;font-weight:600;margin-bottom:8px}
+.p-back .pb-code{background:rgba(34,197,94,0.08);border:1.5px dashed var(--green);border-radius:6px;padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:1.5px;user-select:all;cursor:text;margin-bottom:6px}
+.p-back .pb-hint{font-size:9px;color:var(--muted)}
+.p-card.activated .p-front{opacity:0.3}
+.p-card.activated .p-front::after{content:'ACTIVATED';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--green);background:rgba(10,12,16,0.85);padding:5px 12px;border-radius:5px;border:1px solid var(--green)}
+.p-empty{text-align:center;padding:40px;color:var(--muted);font-size:12px;display:none}
+/* Confirm overlay */
+.p-confirm{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:center}
+.p-confirm.show{display:flex}
+.p-confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 20px;max-width:300px;width:88%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.pc-icon{width:40px;height:40px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff}
+.pc-brand{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.pc-offer{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;margin:4px 0}
+.pc-cost{display:flex;align-items:center;justify-content:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--gold);margin:12px 0 16px}
+.pc-btns{display:flex;gap:8px}
+.pc-btns button{flex:1;padding:11px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none}
+.pc-cancel{background:var(--surface2);color:var(--muted);border:1px solid var(--border)!important}
+.pc-ok{background:linear-gradient(135deg,var(--plum),#6d28d9);color:#fff}
+
+/* ============================================================
+   CONFETTI CANVAS
+   ============================================================ */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:998}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:400px){
+  .w-tile{width:46px;height:46px;font-size:20px}
+  .w-key{height:42px;min-width:26px;font-size:11px}
+  .w-key.big{min-width:44px;font-size:9px}
+  .b-cell{padding:12px 8px}
+  .b-cell .b-emoji{font-size:20px}
+  .b-cell .b-text{font-size:9px}
+  .p-card{height:175px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+<div id="globalToast"></div>
+
+<!-- ============================================================
+     LOGIN SCREEN
+     ============================================================ -->
+<div id="loginScreen" class="hidden">
+  <div class="login-card">
+    <div class="login-logo">P</div>
+    <div class="login-title">Welcome to Plum Personal</div>
+    <div class="login-sub">Enter your details to get started with personalized insurance perks, games, and offers.</div>
+    <div class="form-field">
+      <label>Your Name</label>
+      <input type="text" id="loginName" placeholder="First name" autocomplete="given-name">
+    </div>
+    <div class="form-field">
+      <label>Phone Number</label>
+      <input type="tel" id="loginPhone" placeholder="10-digit mobile" maxlength="10" inputmode="numeric">
+    </div>
+    <button class="btn-primary" id="loginBtn" style="margin-top:8px;opacity:0.4;pointer-events:none" onclick="handleLogin()">Get Started</button>
+    <div class="login-footer">Plum Insurance Broking Pvt. Ltd. | IRDAI License No. 764</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     LOADING SCREEN
+     ============================================================ -->
+<div id="loadingScreen" class="hidden">
+  <div class="spinner"></div>
+  <div style="font-size:13px;color:var(--muted)">Loading your experience...</div>
+</div>
+
+<!-- ============================================================
+     APP SHELL
+     ============================================================ -->
+<div id="appShell">
+  <div class="container">
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="tb-left"><div class="tb-logo">P</div><div class="tb-title">PLUM PERSONAL</div></div>
+      <div class="coins-pill">
+        <div class="coin-icon">P</div>
+        <div class="coin-val" id="coinsDisplay">1,000</div>
+        <div class="coins-tooltip">Earn coins by playing Wordle (+50 per word) and completing Bingo (+500). Spend them on Perks!</div>
+      </div>
+    </div>
+
+    <!-- Greeting -->
+    <div class="greeting">
+      <div class="greeting-hi">Hi <span id="greetName">there</span>,</div>
+      <div class="greeting-name">Welcome to your <em>personal</em> Plum experience</div>
+      <div class="greeting-copy">While you make up your mind about getting a Plum Personal insurance plan, here are some offers and games to keep you engaged. Share with friends and family if you think they could benefit!</div>
+    </div>
+
+    <!-- Tab nav -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="home">Home</button>
+      <button class="tab-btn" data-tab="wordle">Wordle</button>
+      <button class="tab-btn" data-tab="bingo">Bingo</button>
+      <button class="tab-btn" data-tab="perks">Perks</button>
+    </div>
+
+    <!-- ==================== HOME TAB ==================== -->
+    <div class="tab-content active" id="tab-home">
+      <div class="home-cards">
+        <div class="home-card" onclick="switchTab('wordle')">
+          <div class="hc-icon wordle">🔤</div>
+          <div class="hc-body">
+            <div class="hc-title">Insurance Wordle</div>
+            <div class="hc-desc">Guess insurance terms, earn coins, unlock real rewards.</div>
+            <div class="hc-badge coins">+50 coins per word</div>
+          </div>
+          <div class="hc-arrow">›</div>
+        </div>
+        <div class="home-card" onclick="switchTab('bingo')">
+          <div class="hc-icon bingo">🎯</div>
+          <div class="hc-body">
+            <div class="hc-title">Adulting Bingo</div>
+            <div class="hc-desc">Which adulting milestones have you actually hit this year?</div>
+            <div class="hc-badge coins">+500 coins on completion</div>
+          </div>
+          <div class="hc-arrow">›</div>
+        </div>
+        <div class="home-card" onclick="switchTab('perks')">
+          <div class="hc-icon perks">🎁</div>
+          <div class="hc-body">
+            <div class="hc-title">Perks Store</div>
+            <div class="hc-desc">Unlock discount codes on health, fitness, food and more.</div>
+            <div class="hc-badge coins">100 coins each</div>
+          </div>
+          <div class="hc-arrow">›</div>
+        </div>
+      </div>
+
+      <!-- Quote section -->
+      <div class="quote-section">
+        <h3>Ready to get covered?</h3>
+        <p>Get a personalized health insurance quote for yourself and your family. Takes 2 minutes.</p>
+        <div class="quote-btns">
+          <button class="btn-primary" onclick="openQuoteForm()">Get a Quote</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== WORDLE TAB ==================== -->
+    <div class="tab-content" id="tab-wordle">
+      <div class="wordle-wrap">
+        <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;letter-spacing:0.5px">Insurance Wordle</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <div style="text-align:center"><div class="mono" style="font-size:16px;font-weight:700;color:var(--green)" id="wWins">0</div><div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Wins</div></div>
+            <div style="text-align:center"><div class="mono" style="font-size:16px;font-weight:700;color:var(--green)" id="wStreak">0</div><div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Streak</div></div>
+            <div style="width:30px;height:30px;border-radius:6px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px" onclick="openWordleTrophy()">🏆</div>
+          </div>
+        </div>
+        <div class="w-rewards" id="wRewards">
+          <div class="w-track-bar"><div class="w-track-fill" id="wTrackFill" style="width:0%"></div><div class="w-track-markers" id="wTrackMarkers"></div></div>
+          <div class="w-labels" id="wLabels"></div>
+        </div>
+        <div id="wGameArea">
+          <div id="wBoard" class="w-board"></div>
+          <div id="wKeyboard" class="w-kb"></div>
+          <div class="w-info">Words left: <span id="wRemaining">0</span></div>
+        </div>
+        <div id="wDoneArea" class="w-done hidden">
+          <div class="w-done-emoji">🎉</div>
+          <div class="w-done-title">All words played!</div>
+          <div class="w-done-sub">You've completed every insurance word. Check your rewards!</div>
+          <button class="btn-primary" style="max-width:200px;margin:0 auto" onclick="openWordleTrophy()">View Rewards 🏆</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== BINGO TAB ==================== -->
+    <div class="tab-content" id="tab-bingo">
+      <div class="bingo-wrap">
+        <div id="bMainArea">
+          <div class="b-header">
+            <div class="b-badge">FY 2025-26</div>
+            <h2>Adulting Bingo</h2>
+            <p>Tap what you actually did this year.</p>
+          </div>
+          <div class="b-gender" id="bGenderArea">
+            <div class="b-gender-label">I am</div>
+            <div class="b-gender-opts">
+              <button class="b-g-opt" data-g="male" onclick="setBingoGender('male')">Male</button>
+              <button class="b-g-opt" data-g="female" onclick="setBingoGender('female')">Female</button>
+            </div>
+          </div>
+          <div class="b-score"><div class="b-score-pill" id="bScoreDisplay">0 / 9</div></div>
+          <div class="b-grid" id="bGrid"></div>
+          <button class="b-gen-btn" id="bGenBtn" onclick="showBingoResult()">Generate My Persona</button>
+        </div>
+        <div id="bResultArea" class="b-result"></div>
+      </div>
+    </div>
+
+    <!-- ==================== PERKS TAB ==================== -->
+    <div class="tab-content" id="tab-perks">
+      <div class="perks-wrap">
+        <div class="p-wallet">
+          <div class="p-wallet-label">Plum Personal Coins</div>
+          <div class="p-wallet-row"><div class="p-wallet-bal" id="pBalance">1,000</div><div class="p-wallet-unit">coins</div></div>
+          <div class="p-wallet-sub">Tap any perk to unlock its code for <strong>100 coins</strong></div>
+        </div>
+        <div class="p-filters" id="pFilters"></div>
+        <div class="p-grid" id="pGrid"></div>
+        <div class="p-empty" id="pEmpty">No perks in this category.</div>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+</div><!-- /appShell -->
+
+<!-- ==================== WORDLE MODAL ==================== -->
+<div class="w-modal" id="wModal">
+  <div class="w-modal-box">
+    <h2 id="wmTitle">You Won!</h2>
+    <div class="wm-word" id="wmWord">CLAIM</div>
+    <div class="wm-stats">
+      <div class="wm-stat"><b id="wmPlayed">0</b><span>Played</span></div>
+      <div class="wm-stat"><b id="wmRate">0%</b><span>Win %</span></div>
+      <div class="wm-stat"><b id="wmStreak">0</b><span>Streak</span></div>
+    </div>
+    <div class="wm-nudge" id="wmNudge"></div>
+    <div class="wm-reward" id="wmReward">
+      <div style="font-size:20px" id="wmREmoji"></div>
+      <div class="wm-r-title" id="wmRTitle"></div>
+      <div class="wm-r-desc" id="wmRDesc"></div>
+      <a href="#" class="btn-wa" id="wmRCta" target="_blank" style="margin-top:10px">Your Plum advisor will help you claim this →</a>
+      <br>
+      <button class="btn-wa" style="margin-top:8px;background:var(--surface2);color:var(--text)" id="wmRShare">Share on WhatsApp</button>
+    </div>
+    <button class="btn-primary" id="wNextBtn" style="margin-top:12px">NEXT WORD</button>
+  </div>
+</div>
+
+<!-- ==================== WORDLE TROPHY ==================== -->
+<div class="w-trophy-modal" id="wTrophyModal">
+  <div class="w-trophy-box">
+    <div class="wt-header">🏆 Wordle Rewards</div>
+    <div id="wTrophyList"></div>
+    <button class="btn-ghost" style="width:100%;margin-top:12px" onclick="document.getElementById('wTrophyModal').classList.remove('show')">Close</button>
+  </div>
+</div>
+
+<!-- ==================== QUOTE FORM ==================== -->
+<div class="modal-overlay" id="quoteModal">
+  <div class="modal-sheet" id="quoteSheet">
+    <div id="quoteFormArea">
+      <h2>Get a Quick Quote</h2>
+      <div class="ms-sub">Tell us about your family. Our advisor will get in touch.</div>
+      <div class="form-field"><label>Name</label><input type="text" id="qName" placeholder="Full name"></div>
+      <div class="form-field"><label>Age</label><input type="number" id="qAge" placeholder="Your age" min="18" max="99" inputmode="numeric"></div>
+      <div class="form-field"><label>Phone</label><input type="tel" id="qPhone" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"></div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">Who are you looking to cover?</div>
+      <div class="check-row" onclick="toggleCheck('qSelf')"><div class="check-box" id="qSelf"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-label">Yourself</div></div>
+      <div class="check-row" onclick="toggleCheck('qSpouse')"><div class="check-box" id="qSpouse"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-label">Spouse</div></div>
+      <div class="check-row" onclick="toggleCheck('qElderly')"><div class="check-box" id="qElderly"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-label">Parents / In-laws</div></div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">Any existing conditions?</div>
+      <div class="check-row" onclick="toggleCheck('qHyper')"><div class="check-box" id="qHyper"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-label">Hypertension</div></div>
+      <div class="check-row" onclick="toggleCheck('qThyroid')"><div class="check-box" id="qThyroid"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-label">Thyroid</div></div>
+      <div class="check-row" onclick="toggleCheck('qDiabetes')"><div class="check-box" id="qDiabetes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="check-label">Diabetes</div></div>
+      <button class="btn-primary" style="margin-top:16px" onclick="submitQuote()">Submit</button>
+      <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="closeQuoteForm()">Cancel</button>
+    </div>
+    <div id="quoteSuccess" class="hidden">
+      <div class="success-banner">
+        <div class="sb-emoji">✅</div>
+        <div class="sb-title">Got it!</div>
+        <div class="sb-desc">A Plum insurance advisor will reach out to you shortly on your registered number.</div>
+      </div>
+      <button class="btn-primary" style="margin-top:20px" onclick="closeQuoteForm()">Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PERK CONFIRM ==================== -->
+<div class="p-confirm" id="pConfirm">
+  <div class="p-confirm-box">
+    <div class="pc-icon" id="pcIcon"></div>
+    <div class="pc-brand" id="pcBrand"></div>
+    <div class="pc-offer" id="pcOffer"></div>
+    <div class="pc-cost"><span style="width:16px;height:16px;background:var(--gold);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:var(--bg);font-weight:800">P</span> 100 coins will be deducted</div>
+    <div class="pc-btns">
+      <button class="pc-cancel" onclick="cancelPerk()">Skip</button>
+      <button class="pc-ok" onclick="confirmPerk()">Unlock it</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BINGO NUDGE ==================== -->
+<div class="b-nudge" id="bNudge"><div class="b-nudge-char" id="bNudgeChar"></div><div class="b-nudge-line" id="bNudgeLine"></div></div>
+
+<script>
+/* ============================================================
+   THIS FILE IS INTENTIONALLY LARGE.
+   It contains the complete Plum Personal Hub:
+   - Login / Registration with referral tracking
+   - Home tab with cards
+   - Wordle game (backend validated)
+   - Bingo game with persona generation
+   - Perks store with coin system
+   - Quote form
+   - All synced to Google Sheets via Apps Script
+   ============================================================ */
+
+// ============================================================
+// CONFIG
+// ============================================================
+const API = "https://script.google.com/macros/s/AKfycbyJuuwIeYD7UNCfpQgStgqg6gYoo_seUOWicXd8oUdgyXYTHSIN4X0kAuKEmzWRKw5D/exec";
+const ADVISOR_URL = "https://www.plumhq.com/talk-to-us";
+const BASE_URL = window.location.origin + window.location.pathname;
+
+const FALLBACK_ANSWERS = ["claim","cover","rider","bonus","grace","lapse","peril","renew","limit","terms","panel","copay","fraud","yield","waive","payer","agent","audit","death","lives","risks","funds","plans","quote","nurse","prior","vital","debit","float","treat"];
+
+const W_REWARDS = [
+  {at:5,emoji:"🩺",title:"Free Telehealth Session",desc:"One free teleconsultation with a doctor"},
+  {at:15,emoji:"🔬",title:"Free Health Checkup (₹1,500)",desc:"Full health checkup via Orange Health"},
+  {at:20,emoji:"🏋️",title:"Cult Elite Trial (1 month)",desc:"One month of Cult.fit Elite membership"},
+  {at:25,emoji:"🛡️",title:"First Month Premium Waiver",desc:"Your first month of insurance premium, on us"}
+];
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+let USER = null; // {ref_id, name, phone, coins, wordle:{...}, bingo:{...}, perks_activated:[]}
+let ANSWERS = [];
+let refParam = new URLSearchParams(window.location.search).get('ref') || '';
+
+// ============================================================
+// BOOT
+// ============================================================
+window.addEventListener('DOMContentLoaded', boot);
+
+async function boot() {
+  // Check if user has a session
+  const savedRef = localStorage.getItem('pp_ref');
+  const savedPhone = localStorage.getItem('pp_phone');
+
+  if (savedRef && savedPhone) {
+    // Try to load from backend
+    show('loadingScreen');
+    try {
+      const u = await apiCall('load', {phone: savedPhone, ref_id: savedRef});
+      if (u && u.found) {
+        USER = JSON.parse(u.state);
+        USER.ref_id = savedRef;
+        await loadAnswers();
+        startApp();
+        return;
+      }
+    } catch(e) {}
+    // Fallback: show login
+    hide('loadingScreen');
+  }
+  show('loginScreen');
+  setupLoginValidation();
+}
+
+function setupLoginValidation() {
+  const n = document.getElementById('loginName');
+  const p = document.getElementById('loginPhone');
+  const b = document.getElementById('loginBtn');
+  function validate() {
+    p.value = p.value.replace(/\D/g,'').slice(0,10);
+    const ok = n.value.trim().length > 0 && p.value.length === 10;
+    b.style.opacity = ok ? '1' : '0.4';
+    b.style.pointerEvents = ok ? 'auto' : 'none';
+  }
+  n.addEventListener('input', validate);
+  p.addEventListener('input', validate);
+}
+
+async function handleLogin() {
+  const name = document.getElementById('loginName').value.trim();
+  const phone = document.getElementById('loginPhone').value.trim();
+  if (!name || phone.length !== 10) return;
+
+  hide('loginScreen');
+  show('loadingScreen');
+
+  try {
+    // Register or login
+    const res = await apiCall('register', {
+      name: name,
+      phone: phone,
+      referrer_ref: refParam
+    });
+    if (res && res.ref_id) {
+      USER = {
+        ref_id: res.ref_id,
+        name: name,
+        phone: phone,
+        coins: res.coins || 1000,
+        wordle: res.wordle || {played:0,won:0,streak:0,usedWords:[],finished:false},
+        bingo: res.bingo || {completed:false,personality:'',grid:{},gender:''},
+        perks_activated: res.perks_activated || [],
+        quote_requested: res.quote_requested || false
+      };
+      localStorage.setItem('pp_ref', res.ref_id);
+      localStorage.setItem('pp_phone', phone);
+      await loadAnswers();
+      startApp();
+      return;
+    }
+  } catch(e) {
+    console.error('Registration failed', e);
+  }
+
+  // Fallback: create local user
+  USER = {
+    ref_id: 'local_' + Date.now(),
+    name: name,
+    phone: phone,
+    coins: 1000,
+    wordle: {played:0,won:0,streak:0,usedWords:[],finished:false},
+    bingo: {completed:false,personality:'',grid:{},gender:''},
+    perks_activated: [],
+    quote_requested: false
+  };
+  localStorage.setItem('pp_ref', USER.ref_id);
+  localStorage.setItem('pp_phone', phone);
+  await loadAnswers();
+  startApp();
+}
+
+async function loadAnswers() {
+  try {
+    const r = await fetch(API + "?action=answers");
+    const d = await r.json();
+    ANSWERS = (d.answers && d.answers.length > 0) ? d.answers : FALLBACK_ANSWERS;
+  } catch(e) {
+    ANSWERS = FALLBACK_ANSWERS;
+  }
+}
+
+function startApp() {
+  hide('loadingScreen');
+  hide('loginScreen');
+  document.getElementById('appShell').style.display = 'block';
+
+  // Populate greeting
+  document.getElementById('greetName').textContent = USER.name;
+  updateCoinsDisplay();
+
+  // Init all tabs
+  initTabs();
+  initWordle();
+  initBingo();
+  initPerks();
+}
+
+// ============================================================
+// API HELPER
+// ============================================================
+async function apiCall(action, params = {}) {
+  const url = new URL(API);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v]) => {
+    url.searchParams.set(k, typeof v === 'object' ? JSON.stringify(v) : v);
+  });
+  const r = await fetch(url.toString());
+  return await r.json();
+}
+
+async function saveUser() {
+  try {
+    await apiCall('save', {
+      ref_id: USER.ref_id,
+      phone: USER.phone,
+      state: JSON.stringify({
+        name: USER.name,
+        phone: USER.phone,
+        coins: USER.coins,
+        wordle: USER.wordle,
+        bingo: USER.bingo,
+        perks_activated: USER.perks_activated,
+        quote_requested: USER.quote_requested
+      })
+    });
+  } catch(e) { console.warn('Save failed', e); }
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function toast(msg) {
+  const t = document.getElementById('globalToast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+function updateCoinsDisplay() {
+  document.getElementById('coinsDisplay').textContent = USER.coins.toLocaleString();
+  const pb = document.getElementById('pBalance');
+  if (pb) pb.textContent = USER.coins.toLocaleString();
+}
+
+function getShareUrl() {
+  return BASE_URL + '?ref=' + USER.ref_id;
+}
+
+function waShare(text) {
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
+}
+
+// ============================================================
+// WORDLE
+// ============================================================
+const W_ROWS = 6, W_COLS = 5;
+let wState = {};
+let wBoard, wKeyboard;
+
+function initWordle() {
+  wState = {
+    word: '', row: 0, col: 0, guesses: [], gameOver: false, submitting: false, keyStates: {}
+  };
+  // Sync from USER
+  const uw = USER.wordle;
+  document.getElementById('wWins').textContent = uw.won;
+  document.getElementById('wStreak').textContent = uw.streak;
+
+  buildWRewardsTrack();
+  updateWRewardsTrack();
+
+  if (uw.finished || uw.usedWords.length >= ANSWERS.length) {
+    uw.finished = true;
+    document.getElementById('wGameArea').classList.add('hidden');
+    document.getElementById('wDoneArea').classList.remove('hidden');
+    return;
+  }
+
+  wBoard = document.getElementById('wBoard');
+  wKeyboard = document.getElementById('wKeyboard');
+
+  // Build board
+  wBoard.innerHTML = '';
+  for (let i = 0; i < W_ROWS; i++) {
+    const row = document.createElement('div'); row.className = 'w-row';
+    for (let j = 0; j < W_COLS; j++) {
+      const t = document.createElement('div'); t.className = 'w-tile'; row.appendChild(t);
+    }
+    wBoard.appendChild(row);
+  }
+
+  // Build keyboard
+  wKeyboard.innerHTML = '';
+  ['qwertyuiop','asdfghjkl','zxcvbnm'].forEach((rk, idx) => {
+    const kr = document.createElement('div'); kr.className = 'w-kb-row';
+    if (idx === 2) { const e = document.createElement('button'); e.className = 'w-key big'; e.dataset.key = 'Enter'; e.textContent = 'ENTER'; kr.appendChild(e); }
+    rk.split('').forEach(k => { const b = document.createElement('button'); b.className = 'w-key'; b.dataset.key = k; b.textContent = k; kr.appendChild(b); });
+    if (idx === 2) { const b = document.createElement('button'); b.className = 'w-key big'; b.dataset.key = 'Backspace'; b.textContent = '⌫'; kr.appendChild(b); }
+    wKeyboard.appendChild(kr);
+  });
+  wKeyboard.querySelectorAll('.w-key').forEach(k => k.addEventListener('click', () => wHandleKey(k.dataset.key)));
+
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    // Only handle if wordle tab is active
+    if (!document.getElementById('tab-wordle').classList.contains('active')) return;
+    wHandleKey(e.key);
+  });
+
+  document.getElementById('wNextBtn').addEventListener('click', () => {
+    document.getElementById('wModal').classList.remove('show');
+    const rem = ANSWERS.filter(w => !USER.wordle.usedWords.includes(w)).length;
+    if (rem === 0) { USER.wordle.finished = true; saveUser(); document.getElementById('wGameArea').classList.add('hidden'); document.getElementById('wDoneArea').classList.remove('hidden'); }
+    else wNewGame();
+  });
+
+  wNewGame();
+}
+
+function wNewGame() {
+  const avail = ANSWERS.filter(w => !USER.wordle.usedWords.includes(w));
+  if (avail.length === 0) { USER.wordle.finished = true; saveUser(); document.getElementById('wGameArea').classList.add('hidden'); document.getElementById('wDoneArea').classList.remove('hidden'); return; }
+  wState = { word: avail[Math.floor(Math.random() * avail.length)], row: 0, col: 0, guesses: [], gameOver: false, submitting: false, keyStates: {} };
+  wBoard.querySelectorAll('.w-tile').forEach(t => { t.textContent = ''; t.className = 'w-tile'; });
+  wKeyboard.querySelectorAll('.w-key').forEach(k => k.classList.remove('correct','present','absent'));
+  document.getElementById('wRemaining').textContent = avail.length;
+}
+
+function wHandleKey(key) {
+  if (wState.gameOver || wState.submitting) return;
+  if (key === 'Enter') { wSubmit(); return; }
+  if (key === 'Backspace') { if (wState.col === 0) return; wState.col--; const t = wTile(wState.row, wState.col); t.textContent = ''; t.classList.remove('tbd','pop'); return; }
+  if (wState.col >= W_COLS || !/^[a-z]$/i.test(key)) return;
+  const t = wTile(wState.row, wState.col); t.textContent = key.toLowerCase(); t.classList.add('tbd','pop'); setTimeout(() => t.classList.remove('pop'), 100); wState.col++;
+}
+
+async function wSubmit() {
+  if (wState.col < W_COLS) { toast('Not enough letters'); return; }
+  const guess = Array(W_COLS).fill().map((_,i) => wTile(wState.row, i).textContent.toLowerCase()).join('');
+  wState.submitting = true;
+  try { const r = await fetch(API + '?action=validate&word=' + guess); const d = await r.json(); if (!d.valid) { toast('Not in word list'); wState.submitting = false; return; } } catch(e) {}
+  wState.submitting = false; wState.guesses.push(guess);
+  const target = wState.word.split(''), gl = guess.split(''); let colors = Array(W_COLS).fill('absent'), tc = {};
+  target.forEach(l => { tc[l] = (tc[l]||0)+1; });
+  gl.forEach((l,i) => { if (l === target[i]) { colors[i] = 'correct'; tc[l]--; } });
+  gl.forEach((l,i) => { if (colors[i] === 'correct') return; if (target.includes(l) && tc[l] > 0) { colors[i] = 'present'; tc[l]--; } });
+  colors.forEach((c,i) => { const t = wTile(wState.row, i), l = t.textContent.toLowerCase(); setTimeout(() => { t.classList.add('flip'); setTimeout(() => { t.classList.add(c); wUpdateKey(l, c); }, 250); }, i * 100); });
+  const won = colors.every(c => c === 'correct');
+  setTimeout(() => {
+    if (won) {
+      wState.gameOver = true; const prev = USER.wordle.won;
+      USER.wordle.played++; USER.wordle.won++; USER.wordle.streak++; USER.wordle.usedWords.push(wState.word);
+      USER.coins += 50;
+      updateCoinsDisplay(); updateWRewardsTrack(); saveUser();
+      wShowModal(true, prev);
+    } else if (wState.row === W_ROWS - 1) {
+      wState.gameOver = true; USER.wordle.played++; USER.wordle.streak = 0; USER.wordle.usedWords.push(wState.word);
+      saveUser(); wShowModal(false, USER.wordle.won);
+    } else { wState.row++; wState.col = 0; }
+  }, 600);
+}
+
+function wTile(r, c) { return wBoard.children[r].children[c]; }
+function wUpdateKey(l, color) {
+  const p = {absent:0,present:1,correct:2};
+  if (!wState.keyStates[l] || p[color] > p[wState.keyStates[l]]) {
+    wState.keyStates[l] = color;
+    wKeyboard.querySelectorAll(`[data-key="${l}"]`).forEach(k => { k.classList.remove('correct','present','absent'); k.classList.add(color); });
+  }
+}
+
+function buildWRewardsTrack() {
+  const markers = document.getElementById('wTrackMarkers'), labels = document.getElementById('wLabels'), max = W_REWARDS[W_REWARDS.length-1].at;
+  markers.innerHTML = ''; labels.innerHTML = '';
+  W_REWARDS.forEach(r => {
+    const pct = (r.at/max)*100;
+    const dot = document.createElement('div'); dot.className = 'w-dot'; dot.style.left = pct+'%';
+    dot.innerHTML = `<div class="w-tip"><div class="w-tip-t">${r.emoji} ${r.title}</div><div class="w-tip-s locked" id="wts${r.at}">${r.at} wins needed</div></div>`;
+    markers.appendChild(dot);
+    const lbl = document.createElement('div'); lbl.className = 'w-lbl'; lbl.style.left = pct+'%'; lbl.textContent = r.at; labels.appendChild(lbl);
+  });
+}
+function updateWRewardsTrack() {
+  const w = USER.wordle.won, max = W_REWARDS[W_REWARDS.length-1].at;
+  document.getElementById('wTrackFill').style.width = Math.min((w/max)*100, 100)+'%';
+  document.querySelectorAll('.w-dot').forEach((dot, i) => {
+    const r = W_REWARDS[i], s = document.getElementById('wts'+r.at);
+    if (w >= r.at) { dot.classList.add('hit'); s.textContent = 'UNLOCKED ✓'; s.className = 'w-tip-s unlocked'; }
+    else { dot.classList.remove('hit'); s.textContent = (r.at-w)+' more wins'; s.className = 'w-tip-s locked'; }
+  });
+  document.getElementById('wWins').textContent = USER.wordle.won;
+  document.getElementById('wStreak').textContent = USER.wordle.streak;
+}
+
+function wShowModal(won, prevWins) {
+  const m = document.getElementById('wModal'); m.classList.add('show');
+  document.getElementById('wmTitle').textContent = won ? 'You Won! +50 coins' : 'Game Over';
+  document.getElementById('wmWord').textContent = wState.word.toUpperCase();
+  document.getElementById('wmWord').className = 'wm-word ' + (won ? 'won' : 'lost');
+  document.getElementById('wmPlayed').textContent = USER.wordle.played;
+  document.getElementById('wmRate').textContent = USER.wordle.played > 0 ? Math.round(USER.wordle.won/USER.wordle.played*100)+'%' : '0%';
+  document.getElementById('wmStreak').textContent = USER.wordle.streak;
+
+  const nudge = document.getElementById('wmNudge'), reward = document.getElementById('wmReward');
+  nudge.classList.remove('show'); reward.classList.remove('show');
+
+  if (won) {
+    // Check reward unlock
+    let unlocked = null;
+    for (const r of W_REWARDS) { if (prevWins < r.at && USER.wordle.won >= r.at) { unlocked = r; break; } }
+    if (unlocked) {
+      reward.classList.add('show');
+      document.getElementById('wmREmoji').textContent = unlocked.emoji;
+      document.getElementById('wmRTitle').textContent = '🎉 ' + unlocked.title + ' unlocked!';
+      document.getElementById('wmRDesc').textContent = unlocked.desc;
+      document.getElementById('wmRCta').href = ADVISOR_URL;
+      document.getElementById('wmRShare').onclick = () => waShare(`I just unlocked "${unlocked.title}" playing Insurance Wordle on Plum! Try it yourself: ${getShareUrl()}`);
+    } else {
+      let next = null;
+      for (const r of W_REWARDS) { if (USER.wordle.won < r.at) { next = r; break; } }
+      if (next) { nudge.classList.add('show'); nudge.innerHTML = `<span style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-weight:700">${next.at - USER.wordle.won}</span> more win(s) to unlock <strong>${next.title}</strong>`; }
+      else { nudge.classList.add('show'); nudge.innerHTML = '🎉 All rewards unlocked! <a href="'+ADVISOR_URL+'" target="_blank" style="color:var(--plum);font-weight:700">Talk to your Plum advisor →</a>'; }
+    }
+  }
+
+  const rem = ANSWERS.filter(w => !USER.wordle.usedWords.includes(w)).length;
+  document.getElementById('wNextBtn').textContent = rem === 0 ? 'VIEW RESULTS' : 'NEXT WORD';
+}
+
+function openWordleTrophy() {
+  const list = document.getElementById('wTrophyList'); list.innerHTML = '';
+  const w = USER.wordle.won;
+  W_REWARDS.forEach(r => {
+    const ok = w >= r.at;
+    list.innerHTML += `<div class="wt-item ${ok?'unlocked':'locked'}"><div class="wt-emoji">${r.emoji}</div><div class="wt-body"><div class="wt-name">${r.title}</div><div class="wt-desc">${r.desc}</div><div class="wt-meta"><span class="wt-badge ${ok?'won':'not'}">${ok?'Unlocked ✓':(r.at-w)+' wins away'}</span>${ok?'<a href="'+ADVISOR_URL+'" target="_blank" style="font-size:10px;color:var(--plum);font-weight:600;text-decoration:none">Claim with advisor →</a>':''}</div></div></div>`;
+  });
+  document.getElementById('wTrophyModal').classList.add('show');
+}
+document.getElementById('wTrophyModal').addEventListener('click', e => { if (e.target.id === 'wTrophyModal') e.target.classList.remove('show'); });
+
+// ============================================================
+// BINGO
+// ============================================================
+const B_SQUARES = [
+  {id:'sip',emoji:'📈',text:'Started a SIP',cluster:'W'},
+  {id:'insurance',emoji:'🛡️',text:'Got health insurance for family',cluster:'P'},
+  {id:'itr',emoji:'📋',text:'Filed ITR before deadline',cluster:'R'},
+  {id:'emergency',emoji:'🏦',text:'Built a 3-month emergency fund',cluster:'W'},
+  {id:'emi',emoji:'🚫',text:'Said no to a bad EMI',cluster:'R'},
+  {id:'checkup',emoji:'🩺',text:'Got a health checkup done',cluster:'P'},
+  {id:'creditcard',emoji:'💳',text:'Paid off a credit card fully',cluster:'W'},
+  {id:'nominations',emoji:'📝',text:'Set up nominations on all accounts',cluster:'P'},
+  {id:'80c',emoji:'🧾',text:'Maxed out 80C without panic',cluster:'R'}
+];
+const B_NUDGES = {male:{sip:{char:'Dhoni energy.',line:'Finished before the last over.'},insurance:{char:'Mufasa mode.',line:'Family first, always.'},itr:{char:'Sherlock energy.',line:'Deadline decoded, deadline beaten.'},emergency:{char:'Batman vibes.',line:'Prepared for anything.'},emi:{char:'Rancho energy.',line:'Saw right through the system.'},checkup:{char:'Ted Lasso energy.',line:'Actually showed up.'},creditcard:{char:'Saitama mode.',line:'One punch, debt gone.'},nominations:{char:'Dumbledore energy.',line:'Planned beyond himself.'},'80c':{char:'Shikamaru energy.',line:'Done before everyone panicked.'}},female:{sip:{char:'Naina energy.',line:'Quietly sorted while everyone was vibing.'},insurance:{char:'Moana mode.',line:'Family first, always.'},itr:{char:'Hermione energy.',line:'Rules respected.'},emergency:{char:'Katniss vibes.',line:'Always had a survival plan.'},emi:{char:'Wednesday Addams energy.',line:'Not falling for that.'},checkup:{char:'Alia Bhatt energy.',line:'Actually showed up.'},creditcard:{char:'Taylor Swift mode.',line:'Shook it off.'},nominations:{char:'Black Widow energy.',line:'Planned three steps ahead.'},'80c':{char:'Monica Geller energy.',line:'Obviously done in January.'}}};
+const B_PERSONAS = {male:{fresh_start:{title:'The Fresh Start',char:'Bunny from YJHD',cardline:'Abhi toh party shuru hui hai. But the party needs a plan.',desc:'You checked nothing. Every box is doable in the next 90 days. Start anywhere.'},first_step:{title:'The First Step',char:'Young Simba',cardline:'Just remembered you can\'t wait to be king without doing king stuff.',desc:'One box. It\'s not zero. You\'ve broken the seal.'},stacker:{title:'The Stacker',char:'Tony Stark',cardline:'Money game strong. Safety game pending.',desc:'SIP running, funds building, debt cleared. But none of it is protected. One health emergency and the stack gets raided.'},guardian:{title:'The Guardian',char:'SpiderMan',cardline:'The people around you are luckier than they know.',desc:'Family insured, nominations set, checkup done. Now turn that energy toward building wealth too.'},rulebook:{title:'The Rule Book',char:'Chandler Bing',cardline:'Every rule followed. Every deadline met. Safety net still missing.',desc:'ITR filed, 80C maxed, bad EMIs rejected. But rules don\'t cover a hospital bed.'},quiet_planner:{title:'The Quiet Planner',char:'Naruto',cardline:'Builds and protects. Doesn\'t need applause.',desc:'Building wealth AND protecting your people. The rarest combo at any age.'},optimizer:{title:'The Optimizer',char:'Sheldon Cooper',cardline:'Plan is perfect. Except the one thing that can undo it.',desc:'Money growing, taxes clean. But a health crisis with no insurance is still an open risk.'},safety_net:{title:'The Safety Net',char:'Samwise Gamgee',cardline:'Carrying everyone. Not building for yourself yet.',desc:'Family protected, rules followed. But your own wealth isn\'t growing.'},almost_there:{title:'The Almost There',char:'Rahul Dravid',cardline:'Solid everywhere. Finished nowhere.',desc:'60-70% done across the board and 100% done on nothing. One focused month changes that.'},ninety:{title:'The 90 Percenter',char:'Virat Kohli',cardline:'So close. One or two boxes away from bulletproof.',desc:'You probably know exactly which ones you missed. One boring afternoon away from done.'},final_boss:{title:'The Final Boss',char:'Dhoni',cardline:'All 9. Send this to someone who needs to catch up.',desc:'Every box done. You are the person other people should be sending this to.'}},female:{fresh_start:{title:'The Fresh Start',char:'Geet from Jab We Met',cardline:'Main apni favourite hoon. But the favourite needs a plan.',desc:'You checked nothing. Every box is doable in the next 90 days.'},first_step:{title:'The First Step',char:'Rapunzel',cardline:'Just stepped outside. The adventure starts now.',desc:'One box. The hard part was starting. Now pick one more.'},stacker:{title:'The Stacker',char:'Deepika Padukone',cardline:'Money game strong. Safety game pending.',desc:'SIP running, funds building. But none of it is protected.'},guardian:{title:'The Guardian',char:'Moana',cardline:'The people around you are luckier than they know.',desc:'Family insured, nominations set, checkup done. Now build wealth too.'},rulebook:{title:'The Rule Book',char:'Hermione',cardline:'Every rule followed. Safety net still missing.',desc:'ITR filed, 80C maxed. But rules don\'t cover a hospital bed.'},quiet_planner:{title:'The Quiet Planner',char:'Mikasa',cardline:'Builds and protects. Doesn\'t need applause.',desc:'Building wealth AND protecting people. The rarest combo.'},optimizer:{title:'The Optimizer',char:'Monica Geller',cardline:'Plan is perfect. Except the one thing that can undo it.',desc:'Money growing, taxes clean. But health crisis with no insurance is still open.'},safety_net:{title:'The Safety Net',char:'Naina from YJHD',cardline:'Carrying everyone. Not building for yourself yet.',desc:'Family protected, rules followed. Your own wealth isn\'t growing.'},almost_there:{title:'The Almost There',char:'PV Sindhu',cardline:'Solid everywhere. Finished nowhere.',desc:'One focused month and you could be The Final Boss.'},ninety:{title:'The 90 Percenter',char:'Beyonce',cardline:'So close. One boring afternoon away from done.',desc:'You know exactly which ones you missed.'},final_boss:{title:'The Final Boss',char:'Taylor Swift',cardline:'All 9. Send this to someone who needs to catch up.',desc:'Every box done. You are the person others should be sending this to.'}}};
+
+let bChecked = new Set();
+let bGender = '';
+let bNudgeTimeout = null;
+
+function initBingo() {
+  // Restore from USER
+  if (USER.bingo.completed && USER.bingo.personality) {
+    bGender = USER.bingo.gender || '';
+    if (USER.bingo.grid) {
+      bChecked = new Set(Object.keys(USER.bingo.grid).filter(k => USER.bingo.grid[k]));
+    }
+    // Show result directly
+    buildBingoGrid();
+    showBingoResultDirect();
+    return;
+  }
+  if (USER.bingo.gender) { bGender = USER.bingo.gender; document.querySelectorAll('.b-g-opt').forEach(b => b.classList.toggle('selected', b.dataset.g === bGender)); }
+  buildBingoGrid();
+}
+
+function buildBingoGrid() {
+  const grid = document.getElementById('bGrid'); grid.innerHTML = '';
+  B_SQUARES.forEach(sq => {
+    const cell = document.createElement('div');
+    cell.className = 'b-cell' + (bChecked.has(sq.id) ? ' checked' : '');
+    cell.innerHTML = `<div class="b-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="b-emoji">${sq.emoji}</div><div class="b-text">${sq.text}</div>`;
+    cell.addEventListener('click', () => bToggle(sq.id));
+    grid.appendChild(cell);
+  });
+  bUpdateScore();
+}
+
+function setBingoGender(g) {
+  bGender = g;
+  document.querySelectorAll('.b-g-opt').forEach(b => b.classList.toggle('selected', b.dataset.g === g));
+  USER.bingo.gender = g;
+}
+
+function bToggle(id) {
+  if (!bGender) { toast('Please select Male or Female first'); return; }
+  const cell = document.getElementById('bGrid').children[B_SQUARES.findIndex(s => s.id === id)];
+  if (bChecked.has(id)) { bChecked.delete(id); cell.classList.remove('checked'); }
+  else { bChecked.add(id); cell.classList.add('checked'); bShowNudge(id); }
+  bUpdateScore();
+}
+
+function bUpdateScore() {
+  document.getElementById('bScoreDisplay').textContent = bChecked.size + ' / 9';
+  document.getElementById('bGenBtn').classList.toggle('visible', bChecked.size > 0 && bGender);
+}
+
+function bShowNudge(id) {
+  if (!bGender) return;
+  const n = B_NUDGES[bGender][id]; if (!n) return;
+  const t = document.getElementById('bNudge');
+  document.getElementById('bNudgeChar').textContent = n.char;
+  document.getElementById('bNudgeLine').textContent = n.line;
+  if (bNudgeTimeout) clearTimeout(bNudgeTimeout);
+  t.classList.remove('show');
+  requestAnimationFrame(() => { t.classList.add('show'); bNudgeTimeout = setTimeout(() => t.classList.remove('show'), 2200); });
+}
+
+function bGetPersonaKey() {
+  const total = bChecked.size;
+  let W=0,P=0,R=0;
+  bChecked.forEach(id => { const s = B_SQUARES.find(x=>x.id===id); if(s.cluster==='W')W++; if(s.cluster==='P')P++; if(s.cluster==='R')R++; });
+  if(total===0)return 'fresh_start'; if(total===9)return 'final_boss'; if(total===1)return 'first_step'; if(total>=7)return 'ninety';
+  if(W>=2&&P<=1&&R<=1)return 'stacker'; if(P>=2&&W<=1&&R<=1)return 'guardian'; if(R>=2&&W<=1&&P<=1)return 'rulebook';
+  if(W>=2&&P>=2&&R<=1)return 'quiet_planner'; if(W>=2&&R>=2&&P<=1)return 'optimizer'; if(P>=2&&R>=2&&W<=1)return 'safety_net';
+  return 'almost_there';
+}
+
+function showBingoResult() {
+  const key = bGetPersonaKey();
+  const persona = B_PERSONAS[bGender][key];
+  let W=0,P=0,R=0;
+  bChecked.forEach(id => { const s = B_SQUARES.find(x=>x.id===id); if(s.cluster==='W')W++; if(s.cluster==='P')P++; if(s.cluster==='R')R++; });
+
+  // Save to USER
+  const gridObj = {};
+  B_SQUARES.forEach(s => { gridObj[s.id] = bChecked.has(s.id); });
+  USER.bingo = { completed: true, personality: key, grid: gridObj, gender: bGender };
+  USER.coins += 500;
+  updateCoinsDisplay();
+  saveUser();
+
+  renderBingoResult(persona, key, W, P, R);
+}
+
+function showBingoResultDirect() {
+  const key = USER.bingo.personality;
+  const persona = B_PERSONAS[bGender || 'male'][key];
+  let W=0,P=0,R=0;
+  bChecked.forEach(id => { const s = B_SQUARES.find(x=>x.id===id); if(s.cluster==='W')W++; if(s.cluster==='P')P++; if(s.cluster==='R')R++; });
+  renderBingoResult(persona, key, W, P, R);
+}
+
+function renderBingoResult(persona, key, W, P, R) {
+  document.getElementById('bMainArea').classList.add('hidden');
+  const ra = document.getElementById('bResultArea');
+  ra.className = 'b-result show';
+  ra.innerHTML = `
+    <div class="b-persona">
+      <div class="bp-score">${bChecked.size} / 9</div>
+      <div class="bp-user">${USER.name.toUpperCase()}, YOU ARE</div>
+      <div class="bp-title">${persona.title}</div>
+      <div class="bp-char">${persona.char} energy</div>
+      <div class="bp-badges">${W>0?`<span class="bp-badge w">Wealth ${W}/3</span>`:''}${P>0?`<span class="bp-badge p">Protection ${P}/3</span>`:''}${R>0?`<span class="bp-badge r">Compliance ${R}/3</span>`:''}</div>
+      <div class="bp-cardline">"${persona.cardline}"</div>
+      <div class="bp-desc">${persona.desc}</div>
+    </div>
+    <div class="b-share">
+      <h3>Who in your circle needs this reality check?</h3>
+      <button class="btn-wa" onclick="waShare('I got *${persona.title}* (${persona.char} energy) on the Adulting Bingo! ${bChecked.size}/9 boxes checked. What are you? 👀\\n\\nPlay here: ${getShareUrl()}')">Share on WhatsApp</button>
+    </div>
+    <div class="b-plum-nudge">
+      <p>${P<=W&&P<=R ? "The square most people skip? Health insurance for family. See what it actually costs." : W<=P&&W<=R ? "Protection sorted. Now make your money grow too." : "You build and protect. Make sure the taxman isn't eating your gains."}</p>
+      <a href="${ADVISOR_URL}" target="_blank" style="display:inline-block;font-size:12px;font-weight:600;color:var(--green);background:var(--green-soft);padding:8px 20px;border-radius:20px">Check plans</a>
+    </div>
+    <div class="b-play-again"><button onclick="bReset()">Play again</button></div>
+  `;
+  window.scrollTo(0, 0);
+}
+
+function bReset() {
+  bChecked = new Set();
+  USER.bingo = {completed:false,personality:'',grid:{},gender:bGender};
+  saveUser();
+  document.getElementById('bResultArea').className = 'b-result';
+  document.getElementById('bResultArea').innerHTML = '';
+  document.getElementById('bMainArea').classList.remove('hidden');
+  buildBingoGrid();
+}
+
+// ============================================================
+// PERKS
+// ============================================================
+const PERKS = [
+  {brand:"1MG",offer:"Upto 22% off",desc:"on medicines",code:"PLUM1MG22",color:"#FF4A4A",cat:"Health",initial:"1mg"},
+  {brand:"PharmEasy",offer:"Upto 23% off",desc:"on prescribed medicines",code:"PLUMPE23",color:"#10A37F",cat:"Health",initial:"PE"},
+  {brand:"PharmEasy",offer:"Upto 35% off",desc:"on at-home lab tests",code:"PLUMPELAB35",color:"#10A37F",cat:"Health",initial:"PE"},
+  {brand:"Orange Health",offer:"Extra 27% off",desc:"on tests & checkups",code:"PLUMORANGE27",color:"#F57C00",cat:"Health",initial:"OH"},
+  {brand:"Tata 1MG Labs",offer:"Extra 10% off",desc:"on lab tests",code:"PLUM1MGLAB10",color:"#E8D4B8",cat:"Health",initial:"1mg",tc:"#333"},
+  {brand:"Netmeds",offer:"Free 12 months",desc:"Netmeds First membership",code:"PLUMNETFREE",color:"#28B67A",cat:"Health",initial:"N+"},
+  {brand:"Cura Care",offer:"Extra 60% off",desc:"at-home dental services",code:"PLUMCURA60",color:"#7C4DFF",cat:"Health",initial:"CC"},
+  {brand:"Frido",offer:"Extra 20% off",desc:"on pain relief products",code:"PLUMFRIDO20",color:"#FDD835",cat:"Health",initial:"Fr",tc:"#333"},
+  {brand:"NuaWoman",offer:"Extra 30% off",desc:"on period care",code:"PLUMNUA30",color:"#FF6B6B",cat:"Health",initial:"nua"},
+  {brand:"Fittr",offer:"Extra 25% off",desc:"on fitness coaches",code:"PLUMFITTR25",color:"#4A5BF7",cat:"Fitness",initial:"F"},
+  {brand:"Puma",offer:"Extra 8% off",desc:"on all EOSS products",code:"PLUMPUMA8",color:"#000",cat:"Fitness",initial:"PUMA"},
+  {brand:"Playo",offer:"Extra 25% off",desc:"on courts & turfs",code:"PLUMPLAYO25",color:"#2ECC71",cat:"Fitness",initial:"P"},
+  {brand:"SuperYou",offer:"Extra 20% off",desc:"on protein products",code:"PLUMSUPERYOU20",color:"#FF2D2D",cat:"Fitness",initial:"SY"},
+  {brand:"MuscleBlaze",offer:"Flat ₹200 off",desc:"min order ₹1999",code:"PLUMMB200",color:"#FFB300",cat:"Fitness",initial:"MB",tc:"#333"},
+  {brand:"The Whole Truth",offer:"Extra 15% off",desc:"on all products",code:"PLUMTWT15",color:"#F5EDE0",cat:"Food",initial:"TWT",tc:"#333"},
+  {brand:"Eat Better Co",offer:"Extra 25% off",desc:"on healthy snacks",code:"PLUMEAT25",color:"#4CAF50",cat:"Food",initial:"EB"},
+  {brand:"Cosmix",offer:"Extra 15% off",desc:"on plant protein",code:"PLUMCOSMIX15",color:"#FF8A80",cat:"Food",initial:"Cx"},
+  {brand:"Wellbeing Nutrition",offer:"Extra 10% off",desc:"on supplements",code:"PLUMWBN10",color:"#D4A574",cat:"Food",initial:"WN"},
+  {brand:"Farmley",offer:"Extra 15% off",desc:"on dry fruits & nuts",code:"PLUMFARM15",color:"#1A237E",cat:"Food",initial:"Fm"},
+  {brand:"Green Soul",offer:"Extra 10% off",desc:"on ergonomic chairs",code:"PLUMGS10",color:"#F5F5F0",cat:"Lifestyle",initial:"GS",tc:"#333"},
+  {brand:"Gratitude",offer:"Free 3 months",desc:"Gratitude PRO membership",code:"PLUMGRAT3",color:"#FFCDD2",cat:"Lifestyle",initial:"G",tc:"#333"}
+];
+const P_CATS = ["All","Health","Fitness","Food","Lifestyle"];
+const P_COST = 100;
+let pFilter = "All";
+let pPendingIdx = null;
+
+function initPerks() {
+  renderPFilters();
+  renderPGrid();
+  document.getElementById('pBalance').textContent = USER.coins.toLocaleString();
+}
+
+function renderPFilters() {
+  document.getElementById('pFilters').innerHTML = P_CATS.map(c => `<button class="p-fbtn ${c===pFilter?'active':''}" onclick="setPFilter('${c}')">${c}</button>`).join('');
+}
+function setPFilter(c) { pFilter = c; renderPFilters(); renderPGrid(); }
+
+function renderPGrid() {
+  const grid = document.getElementById('pGrid'), empty = document.getElementById('pEmpty');
+  const filtered = pFilter === 'All' ? PERKS : PERKS.filter(p => p.cat === pFilter);
+  if (!filtered.length) { grid.style.display = 'none'; empty.style.display = 'block'; return; }
+  grid.style.display = 'grid'; empty.style.display = 'none';
+  grid.innerHTML = filtered.map(p => {
+    const gi = PERKS.indexOf(p), act = USER.perks_activated.includes(gi), tc = p.tc || '#fff';
+    const fs = p.initial.length > 3 ? '8px' : p.initial.length > 2 ? '9px' : '13px';
+    return `<div class="p-card ${act?'activated flipped':''}" id="pc${gi}" onclick="activatePerk(${gi})"><div class="p-inner"><div class="p-front"><div class="p-logo" style="background:${p.color};color:${tc};font-size:${fs}">${p.initial}</div><div class="p-brand">${p.brand}</div><div class="p-offer">${p.offer}</div><div class="p-pdesc">${p.desc}</div><div class="p-cost"><span class="pc">P</span>100 coins</div></div><div class="p-back"><div class="pb-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="pb-label">Unlocked</div><div class="pb-brand">${p.brand}</div><div class="pb-offer">${p.offer}</div><div class="pb-code">${p.code}</div><div class="pb-hint">Tap code to copy</div></div></div></div>`;
+  }).join('');
+}
+
+function activatePerk(idx) {
+  if (USER.perks_activated.includes(idx)) return;
+  if (USER.coins < P_COST) { toast('Not enough coins!'); return; }
+  pPendingIdx = idx;
+  const p = PERKS[idx], tc = p.tc || '#fff';
+  document.getElementById('pcIcon').style.background = p.color;
+  document.getElementById('pcIcon').style.color = tc;
+  document.getElementById('pcIcon').textContent = p.initial;
+  document.getElementById('pcBrand').textContent = p.brand;
+  document.getElementById('pcOffer').textContent = p.offer;
+  document.getElementById('pConfirm').classList.add('show');
+}
+function cancelPerk() { pPendingIdx = null; document.getElementById('pConfirm').classList.remove('show'); }
+function confirmPerk() {
+  document.getElementById('pConfirm').classList.remove('show');
+  if (pPendingIdx === null) return;
+  const idx = pPendingIdx; pPendingIdx = null;
+  USER.perks_activated.push(idx);
+  USER.coins -= P_COST;
+  updateCoinsDisplay();
+  const card = document.getElementById('pc'+idx);
+  if (card) card.classList.add('flipped','activated');
+  saveUser();
+  toast(PERKS[idx].brand + ' unlocked! -100 coins');
+  burstConfetti();
+
+  // WhatsApp share prompt after a small delay
+  setTimeout(() => {
+    if (confirm('Share this perk on WhatsApp?')) {
+      waShare(`I just unlocked ${PERKS[idx].offer} on ${PERKS[idx].brand} through Plum Personal! Check out your own rewards: ${getShareUrl()}`);
+    }
+  }, 1500);
+}
+
+// Copy code on tap
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('pb-code')) {
+    navigator.clipboard.writeText(e.target.textContent).then(() => toast('Code copied!')).catch(() => {});
+  }
+});
+
+// ============================================================
+// QUOTE FORM
+// ============================================================
+function openQuoteForm() {
+  document.getElementById('quoteFormArea').classList.remove('hidden');
+  document.getElementById('quoteSuccess').classList.add('hidden');
+  // Pre-fill
+  document.getElementById('qName').value = USER.name || '';
+  document.getElementById('qPhone').value = USER.phone || '';
+  document.getElementById('quoteModal').classList.add('show');
+}
+function closeQuoteForm() { document.getElementById('quoteModal').classList.remove('show'); }
+
+function toggleCheck(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('on');
+}
+
+async function submitQuote() {
+  const name = document.getElementById('qName').value.trim();
+  const age = document.getElementById('qAge').value.trim();
+  const phone = document.getElementById('qPhone').value.trim();
+  if (!name || !age || phone.length !== 10) { toast('Please fill all required fields'); return; }
+
+  const data = {
+    ref_id: USER.ref_id,
+    name, age, phone,
+    self: document.getElementById('qSelf').classList.contains('on'),
+    spouse: document.getElementById('qSpouse').classList.contains('on'),
+    elderly: document.getElementById('qElderly').classList.contains('on'),
+    hypertension: document.getElementById('qHyper').classList.contains('on'),
+    thyroid: document.getElementById('qThyroid').classList.contains('on'),
+    diabetes: document.getElementById('qDiabetes').classList.contains('on')
+  };
+
+  try { await apiCall('quote', data); } catch(e) {}
+  USER.quote_requested = true;
+  saveUser();
+
+  document.getElementById('quoteFormArea').classList.add('hidden');
+  document.getElementById('quoteSuccess').classList.remove('hidden');
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+function burstConfetti() {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const particles = [], colors = ['#7c3aed','#fbbf24','#22c55e','#6d28d9','#f87171','#fff'];
+  for (let i = 0; i < 45; i++) {
+    particles.push({x:canvas.width/2+(Math.random()-0.5)*200,y:canvas.height*0.4,vx:(Math.random()-0.5)*12,vy:(Math.random()-1)*14,size:Math.random()*6+3,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*360,rotV:(Math.random()-0.5)*15,life:1});
+  }
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      if (p.life <= 0) return; alive = true;
+      p.x += p.vx; p.vy += 0.4; p.y += p.vy; p.rot += p.rotV; p.life -= 0.015;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot*Math.PI/180); ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6); ctx.restore();
+    });
+    if (alive) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+</script>
+</body>
+</html>
