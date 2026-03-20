@@ -404,10 +404,13 @@ a{color:var(--plum);text-decoration:none}
     <!-- Top bar -->
     <div class="top-bar">
       <div class="tb-left"><div class="tb-logo">P</div><div class="tb-title">PLUM PERSONAL</div></div>
-      <div class="coins-pill">
-        <div class="coin-icon">P</div>
-        <div class="coin-val" id="coinsDisplay">1,000</div>
-        <div class="coins-tooltip">Earn coins by playing Wordle (+50 per word) and completing Bingo (+500). Spend them on Perks!</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="coins-pill">
+          <div class="coin-icon">P</div>
+          <div class="coin-val" id="coinsDisplay">1,000</div>
+          <div class="coins-tooltip">Earn coins by playing Wordle (+50 per word) and completing Bingo (+500). Spend them on Perks!</div>
+        </div>
+        <button onclick="signOut()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--muted);font-size:9px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap">Sign Out</button>
       </div>
     </div>
 
@@ -826,6 +829,18 @@ function updateCoinsDisplay() {
 
 function getShareUrl() {
   return BASE_URL + '?ref=' + USER.ref_id;
+}
+
+function signOut() {
+  localStorage.removeItem('pp_ref');
+  localStorage.removeItem('pp_phone');
+  USER = null;
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('loginName').value = '';
+  document.getElementById('loginPhone').value = '';
+  document.getElementById('loginBtn').style.opacity = '0.4';
+  document.getElementById('loginBtn').style.pointerEvents = 'none';
 }
 
 function waShare(text) {
