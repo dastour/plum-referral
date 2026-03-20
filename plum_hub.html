@@ -719,7 +719,7 @@ async function handleLogin() {
     if (res && res.ref_id) {
       USER = {
         ref_id: res.ref_id,
-        name: name,
+        name: res.name || name,
         phone: phone,
         coins: res.coins || 1000,
         wordle: res.wordle || {played:0,won:0,streak:0,usedWords:[],finished:false},
