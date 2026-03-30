@@ -391,6 +391,9 @@ a{color:var(--plum);text-decoration:none}
 .p-card.activated .p-front{opacity:0.3}
 .p-card.activated .p-front::after{content:'ACTIVATED';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--green);background:rgba(255,248,240,0.9);padding:5px 12px;border-radius:5px;border:1.5px solid var(--green)}
 .p-empty{text-align:center;padding:40px;color:var(--muted);font-size:12px;display:none}
+.p-show-all{display:none;width:100%;padding:12px;margin-top:10px;background:none;border:1.5px dashed var(--border);border-radius:12px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s}
+.p-show-all:active{transform:scale(0.98)}
+.p-show-all:hover{border-color:var(--plum);color:var(--plum)}
 .p-confirm{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:center}
 .p-confirm.show{display:flex}
 .p-confirm-box{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:24px 20px;max-width:300px;width:88%;text-align:center;box-shadow:var(--shadow-lg)}
@@ -658,6 +661,7 @@ a{color:var(--plum);text-decoration:none}
 <div class="p-wallet"><div class="p-wallet-label">Plum Personal Coins</div><div class="p-wallet-row"><div class="p-wallet-bal" id="pBalance">1,000</div><div class="p-wallet-unit">coins</div></div><div class="p-wallet-sub">Tap any perk to unlock its code for <strong>200 coins</strong></div></div>
 <div class="p-filters" id="pFilters"></div>
 <div class="p-grid" id="pGrid"></div>
+<button class="p-show-all" id="pShowAll" onclick="togglePerksExpand()">Show all perks</button>
 <div class="p-empty" id="pEmpty">No perks in this category.</div>
 </div>
 
@@ -940,7 +944,7 @@ function startApp() {
   document.getElementById('appShell').style.display='block';
   document.getElementById('stickyFooter').style.display='flex';
 
-  // Greeting logic
+  // Greeting logic: show referrer until user starts engaging
   const gl = document.getElementById('greetLine');
   const gc = document.getElementById('greetCopy');
   if(USER.referrer_name && !USER.quote_requested && USER.wordle.played===0 && !USER.dream.completed){
@@ -1199,10 +1203,12 @@ function bReset(){bChecked=new Set();USER.bingo={completed:false,personality:'',
 // PERKS (200 coins per perk, up from 100)
 // ============================================================
 let pFilter="All",pPendingIdx=null;
+let pExpanded=false;
 function initPerks(){renderPFilters();renderPGrid();document.getElementById('pBalance').textContent=USER.coins.toLocaleString()}
 function renderPFilters(){document.getElementById('pFilters').innerHTML=P_CATS.map(c=>`<button class="p-fbtn ${c===pFilter?'active':''}" onclick="setPFilter('${c}')">${c}</button>`).join('')}
-function setPFilter(c){pFilter=c;renderPFilters();renderPGrid()}
-function renderPGrid(){const grid=document.getElementById('pGrid'),empty=document.getElementById('pEmpty');const filtered=pFilter==='All'?PERKS:PERKS.filter(p=>p.cat===pFilter);if(!filtered.length){grid.style.display='none';empty.style.display='block';return}grid.style.display='grid';empty.style.display='none';grid.innerHTML=filtered.map(p=>{const gi=PERKS.indexOf(p),act=USER.perks_activated.includes(gi),tc=p.tc||'#fff';const fs=p.initial.length>3?'8px':p.initial.length>2?'9px':'13px';return`<div class="p-card ${act?'activated flipped':''}" id="pc${gi}" onclick="activatePerk(${gi})"><div class="p-inner"><div class="p-front"><div class="p-logo" style="background:${p.color};color:${tc};font-size:${fs}">${p.initial}</div><div class="p-brand">${p.brand}</div><div class="p-offer">${p.offer}</div><div class="p-pdesc">${p.desc}</div><div class="p-cost"><span class="pc">P</span>200 coins</div></div><div class="p-back"><div class="pb-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="pb-label">Unlocked</div><div class="pb-brand">${p.brand}</div><div class="pb-offer">${p.offer}</div><div class="pb-code">${p.code}</div><div class="pb-hint">Tap code to copy</div></div></div></div>`}).join('')}
+function setPFilter(c){pFilter=c;pExpanded=false;renderPFilters();renderPGrid()}
+function renderPGrid(){const grid=document.getElementById('pGrid'),empty=document.getElementById('pEmpty'),showBtn=document.getElementById('pShowAll');const filtered=pFilter==='All'?PERKS:PERKS.filter(p=>p.cat===pFilter);if(!filtered.length){grid.style.display='none';empty.style.display='block';showBtn.style.display='none';return}grid.style.display='grid';empty.style.display='none';const visible=pExpanded?filtered:filtered.slice(0,4);const hasMore=filtered.length>4;grid.innerHTML=visible.map(p=>{const gi=PERKS.indexOf(p),act=USER.perks_activated.includes(gi),tc=p.tc||'#fff';const fs=p.initial.length>3?'8px':p.initial.length>2?'9px':'13px';return`<div class="p-card ${act?'activated flipped':''}" id="pc${gi}" onclick="activatePerk(${gi})"><div class="p-inner"><div class="p-front"><div class="p-logo" style="background:${p.color};color:${tc};font-size:${fs}">${p.initial}</div><div class="p-brand">${p.brand}</div><div class="p-offer">${p.offer}</div><div class="p-pdesc">${p.desc}</div><div class="p-cost"><span class="pc">P</span>200 coins</div></div><div class="p-back"><div class="pb-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="pb-label">Unlocked</div><div class="pb-brand">${p.brand}</div><div class="pb-offer">${p.offer}</div><div class="pb-code">${p.code}</div><div class="pb-hint">Tap code to copy</div></div></div></div>`}).join('');if(hasMore){showBtn.style.display='block';showBtn.textContent=pExpanded?'Show less':`Show all ${filtered.length} perks`}else{showBtn.style.display='none'}}
+function togglePerksExpand(){pExpanded=!pExpanded;renderPGrid()}
 function activatePerk(idx){if(USER.perks_activated.includes(idx))return;if(USER.coins<P_COST){toast('Not enough coins!');return}pPendingIdx=idx;const p=PERKS[idx],tc=p.tc||'#fff';document.getElementById('pcIcon').style.background=p.color;document.getElementById('pcIcon').style.color=tc;document.getElementById('pcIcon').textContent=p.initial;document.getElementById('pcBrand').textContent=p.brand;document.getElementById('pcOffer').textContent=p.offer;document.getElementById('pConfirm').classList.add('show')}
 function cancelPerk(){pPendingIdx=null;document.getElementById('pConfirm').classList.remove('show')}
 function confirmPerk(){document.getElementById('pConfirm').classList.remove('show');if(pPendingIdx===null)return;const idx=pPendingIdx;pPendingIdx=null;USER.perks_activated.push(idx);USER.coins-=P_COST;updateCoinsDisplay();const card=document.getElementById('pc'+idx);if(card)card.classList.add('flipped','activated');saveUser();toast(PERKS[idx].brand+' unlocked! -200 coins');burstConfetti();setTimeout(()=>{if(confirm('Share this perk on WhatsApp?')){waShare(`I just unlocked ${PERKS[idx].offer} on ${PERKS[idx].brand} through Plum Personal! Check it out: ${getShareUrl()}`)}},1500)}
