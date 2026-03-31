@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share your Plum story</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #FF3F52;
+    --red-light: #FFF0F2;
+    --red-mid: #FFB3BB;
+    --red-dark: #CC2033;
+    --cream: #FFF8F0;
+    --cream-deep: #F5EDE0;
+    --ink: #1A1208;
+    --ink-mid: #5C4F42;
+    --ink-light: #9C8E82;
+    --white: #FFFFFF;
+    --border: rgba(26,18,8,0.1);
+    --border-strong: rgba(26,18,8,0.18);
+    --gold: #B8860B;
+    --gold-light: #FFF9ED;
+    --gold-border: #F5C842;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-pill: 99px;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; align-items: center; gap: 10px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-logo { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--red); letter-spacing: -0.02em; }
+  .topbar-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--cream-deep); }
+  .topbar-label { font-size: 13px; color: var(--ink-light); }
+
+  /* HERO */
+  .hero { background: var(--white); border-bottom: 1px solid var(--border); padding: 44px 24px 36px; text-align: center; }
+  .hero-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
+  .hero-title { font-family: 'DM Serif Display', serif; font-size: clamp(26px, 5vw, 38px); line-height: 1.15; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 12px; }
+  .hero-title em { font-style: italic; color: var(--red); }
+  .hero-sub { font-size: 15px; color: var(--ink-mid); line-height: 1.6; max-width: 400px; margin: 0 auto; }
+
+  /* MAIN */
+  .main { max-width: 680px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  /* COIN GRATITUDE BANNER */
+  .coin-banner {
+    background: var(--gold-light);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .coin-badge {
+    background: var(--gold-border);
+    border-radius: 50%;
+    width: 38px; height: 38px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .coin-body {}
+  .coin-headline { font-size: 14px; font-weight: 500; color: var(--gold); margin-bottom: 4px; }
+  .coin-desc { font-size: 13px; color: #7A6520; line-height: 1.55; }
+  .coin-desc strong { font-weight: 500; }
+
+  /* CARDS */
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; margin-bottom: 14px; }
+  .card-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+  .card-sub { font-size: 13px; color: var(--ink-light); margin-bottom: 18px; line-height: 1.5; }
+
+  /* STARS */
+  .star-row { display: flex; gap: 8px; align-items: center; }
+  .star { font-size: 30px; cursor: pointer; color: var(--cream-deep); transition: color 0.12s, transform 0.1s; line-height: 1; user-select: none; }
+  .star:active { transform: scale(0.88); }
+  .star.active { color: #F5A623; }
+  .star-label { font-size: 13px; color: var(--ink-light); margin-left: 6px; min-width: 90px; transition: color 0.15s; }
+
+  /* TAGS */
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    padding: 8px 14px; border-radius: var(--radius-pill);
+    border: 1px solid var(--border-strong); background: var(--cream);
+    color: var(--ink-mid); font-size: 13px; cursor: pointer;
+    transition: all 0.15s; user-select: none; line-height: 1.3;
+  }
+  .tag:hover { border-color: var(--red-mid); color: var(--red-dark); background: var(--red-light); }
+  .tag.sel { background: var(--red); border-color: var(--red); color: #fff; }
+  .tag.skeptic { border-style: dashed; }
+  .tag.skeptic.sel { border-style: solid; }
+  .tag.negative { border-style: dashed; border-color: #C8A96E; color: #7A5C2E; background: #FDFAF4; }
+  .tag.negative:hover { border-color: #B8860B; color: #7A5C2E; background: #FFF6E0; border-style: dashed; }
+  .tag.negative.sel { background: #B8860B; border-color: #B8860B; color: #fff; border-style: solid; }
+  .tags-divider { width: 100%; font-size: 11px; color: var(--ink-light); letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 0 2px; }
+
+  /* FREETEXT */
+  .freetext {
+    width: 100%; border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    padding: 12px 14px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+    color: var(--ink); background: var(--cream); resize: none; line-height: 1.65;
+    outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .freetext:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(255,63,82,0.1); background: var(--white); }
+  .freetext::placeholder { color: var(--ink-light); font-style: italic; }
+  .char-row { display: flex; justify-content: flex-end; margin-top: 6px; font-size: 12px; color: var(--ink-light); }
+
+  /* TONE */
+  .tone-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tone-btn {
+    padding: 8px 14px; border-radius: var(--radius-pill);
+    border: 1px solid var(--border-strong); background: var(--cream);
+    color: var(--ink-mid); font-size: 13px; cursor: pointer; transition: all 0.15s;
+  }
+  .tone-btn:hover { border-color: var(--red-mid); }
+  .tone-btn.sel { background: var(--red); border-color: var(--red); color: #fff; }
+
+  /* GENERATE */
+  .gen-btn {
+    width: 100%; padding: 15px; background: var(--red); color: #fff;
+    border: none; border-radius: var(--radius); font-size: 16px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s; margin-top: 6px; letter-spacing: 0.01em;
+  }
+  .gen-btn:hover { opacity: 0.91; }
+  .gen-btn:active { transform: scale(0.99); }
+  .gen-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ERROR */
+  .error-msg {
+    display: none; background: #FFF5F5; border: 1px solid #FFB3B3;
+    border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px;
+    color: var(--red-dark); margin-top: 12px; line-height: 1.5;
+  }
+  .error-msg.visible { display: block; }
+
+  /* OUTPUT */
+  .output-section { display: none; margin-top: 14px; }
+  .output-section.visible { display: block; }
+  .output-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: 0 4px 24px rgba(26,18,8,0.08);
+  }
+  .output-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .output-title { font-size: 13px; font-weight: 500; color: var(--ink-mid); text-transform: uppercase; letter-spacing: 0.06em; }
+  .word-count { font-size: 12px; color: var(--ink-light); background: var(--cream); padding: 3px 10px; border-radius: var(--radius-pill); border: 1px solid var(--border); }
+
+  .loading-wrap { display: none; padding: 36px 20px; text-align: center; }
+  .loading-wrap.visible { display: block; }
+  .loading-spinner { width: 28px; height: 28px; border: 2px solid var(--cream-deep); border-top-color: var(--red); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 13px; color: var(--ink-light); }
+
+  .post-body { padding: 24px 20px; font-size: 14.5px; line-height: 1.85; color: var(--ink); white-space: pre-wrap; min-height: 80px; display: none; }
+
+  .output-actions {
+    padding: 14px 20px; border-top: 1px solid var(--border);
+    display: flex; gap: 8px; flex-wrap: wrap; background: var(--cream);
+    align-items: center;
+  }
+  .act-btn {
+    padding: 8px 16px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong); background: var(--white);
+    color: var(--ink); font-size: 13px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .act-btn:hover { border-color: var(--red-mid); color: var(--red-dark); }
+  .act-btn.primary { background: var(--red); color: #fff; border-color: var(--red); }
+  .act-btn.primary:hover { opacity: 0.88; color: #fff; }
+
+  .hashtag-note { font-size: 12px; color: var(--ink-light); width: 100%; padding-top: 2px; line-height: 1.5; }
+  .hashtag-note strong { color: var(--red-dark); font-weight: 500; }
+
+  .toast { font-size: 12px; color: #1a8a4a; font-weight: 500; opacity: 0; transition: opacity 0.3s; margin-left: auto; }
+  .toast.show { opacity: 1; }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 24px; font-size: 12px; color: var(--ink-light); border-top: 1px solid var(--border); background: var(--white); }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px; }
+    .hero { padding: 32px 16px 28px; }
+    .coin-banner { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-logo">plum</span>
+  <div class="topbar-dot"></div>
+  <span class="topbar-label">Share your story</span>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">You're in</div>
+  <h1 class="hero-title">Want to share your<br><em>Plum story</em> on LinkedIn?</h1>
+</div>
+
+<div class="main">
+
+  <!-- COIN GRATITUDE BANNER -->
+  <div class="coin-banner">
+    <div class="coin-badge">🪙</div>
+    <div class="coin-body">
+      <div class="coin-headline">A thank-you from us: 2,000 Plum coins</div>
+      <div class="coin-desc">Post about your experience on LinkedIn with <strong>#personallyplum</strong> and we'll credit 2,000 coins to your Plum Hub balance. If you'd like some help writing it, answer a few quick questions below and we'll draft it for you. It also helps us understand what's working so we can do better for the next person.</div>
+    </div>
+  </div>
+
+  <!-- RATING -->
+  <div class="card">
+    <div class="card-title">How was it, honestly?</div>
+    <div class="card-sub">Insurance has a trust problem. We'd like to know where we actually stand.</div>
+    <div class="star-row">
+      <span class="star" data-v="1">&#9733;</span>
+      <span class="star" data-v="2">&#9733;</span>
+      <span class="star" data-v="3">&#9733;</span>
+      <span class="star" data-v="4">&#9733;</span>
+      <span class="star" data-v="5">&#9733;</span>
+      <span class="star-label" id="starLabel">tap to rate</span>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="card">
+    <div class="card-title">What stood out for you?</div>
+    <div class="card-sub">Pick everything that rings true, including the doubts you came in with.</div>
+    <div class="tags-wrap" id="tagsWrap">
+
+      <div class="tags-divider">What went well</div>
+      <span class="tag" data-val="The sign-up was simpler than I expected">Sign-up was simple</span>
+      <span class="tag" data-val="No hidden costs surfaced later">No hidden costs</span>
+      <span class="tag" data-val="The advisor explained things clearly without rushing">Advisor was patient</span>
+      <span class="tag" data-val="Claims were handled without me having to fight for it">Claims without a fight</span>
+      <span class="tag" data-val="Didn't feel like I was being sold to at any point">No pushy selling</span>
+      <span class="tag" data-val="Being able to use telehealth and health checkups before I even filed a claim made it feel real">Perks felt real, not just marketing</span>
+      <span class="tag" data-val="I could try out the product through Plum Hub before I committed to buying">Tried before I bought</span>
+      <span class="tag" data-val="I finally understand what my cover actually includes">Actually understand my cover</span>
+      <span class="tag" data-val="The price felt fair for what I actually get">Price felt fair</span>
+      <span class="tag" data-val="Support was quick when I had questions">Quick support</span>
+
+      <div class="tags-divider" style="margin-top:10px;">What I came in with</div>
+      <span class="tag skeptic" data-val="I honestly wasn't sure the claim would go through when it mattered">Wasn't sure claims would actually work</span>
+      <span class="tag skeptic" data-val="I had been mis-sold insurance before and was expecting the same">Had been mis-sold before</span>
+      <span class="tag skeptic" data-val="I kept putting it off because it felt too complicated">Kept putting it off</span>
+      <span class="tag skeptic" data-val="I expected fine print to catch me out somewhere">Expected hidden fine print</span>
+      <span class="tag skeptic" data-val="I didn't trust that the support would be there when I actually needed it">Didn't trust the support would last</span>
+
+      <div class="tags-divider" style="margin-top:10px;">What could've been better</div>
+      <span class="tag negative" data-val="The onboarding took longer than I expected">Onboarding felt slow</span>
+      <span class="tag negative" data-val="Some of the policy language was still hard to parse">Policy language still confusing</span>
+      <span class="tag negative" data-val="I had to follow up more than once to get a response">Had to follow up too often</span>
+      <span class="tag negative" data-val="The claim process had more steps than I anticipated">Claim process was more complex than expected</span>
+      <span class="tag negative" data-val="Wasn't always sure who to contact when I had a question">Wasn't clear who to reach out to</span>
+      <span class="tag negative" data-val="Some perks felt hard to actually use in practice">Perks were harder to use than advertised</span>
+
+    </div>
+  </div>
+
+  <!-- FREE TEXT -->
+  <div class="card">
+    <div class="card-title">Anything specific you want to mention?</div>
+    <div class="card-sub">Optional, but makes the post much more personal.</div>
+    <textarea class="freetext" id="freetext" rows="3" placeholder="Loading..."></textarea>
+    <div class="char-row"><span id="charCount">0 / 300</span></div>
+  </div>
+
+  <!-- TONE -->
+  <div class="card">
+    <div class="card-title">What vibe fits you?</div>
+    <div class="card-sub">Affects how the post reads.</div>
+    <div class="tone-row" id="toneRow">
+      <span class="tone-btn sel" data-val="conversational and warm, like texting a friend who needs advice">Warm and casual</span>
+      <span class="tone-btn" data-val="reflective and thoughtful, like something you'd write after sitting with the experience for a few days">Reflective</span>
+      <span class="tone-btn" data-val="direct and no-fluff, just what happened and what you took away">Direct</span>
+      <span class="tone-btn" data-val="lightly self-aware and a bit wry, not taking itself too seriously">Lightly wry</span>
+    </div>
+  </div>
+
+  <!-- GENERATE -->
+  <button class="gen-btn" id="genBtn" onclick="generate()">Write my post</button>
+  <div class="error-msg" id="errorMsg"></div>
+
+  <!-- OUTPUT -->
+  <div class="output-section" id="outputSection">
+    <div class="output-card">
+      <div class="output-header">
+        <span class="output-title">Your post</span>
+        <span class="word-count" id="wordCount">0 words</span>
+      </div>
+      <div class="loading-wrap" id="loadingWrap">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Writing your story...</div>
+      </div>
+      <div class="post-body" id="postBody"></div>
+      <div class="output-actions">
+        <button class="act-btn primary" onclick="copyPost()">Copy post</button>
+        <button class="act-btn" onclick="regenerate()">Try again</button>
+        <button class="act-btn" onclick="openLinkedIn()">Open LinkedIn</button>
+        <span class="toast" id="toast">Copied</span>
+        <div class="hashtag-note">Post with <strong>#personallyplum</strong> to get your 2,000 coins credited.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Plum Personal &nbsp;&middot;&nbsp; IRDAI Reg. No. 764
+</div>
+
+<script>
+  // --- CONFIG ---
+  // Replace the value below with your actual Anthropic API key before deploying
+  const ANTHROPIC_API_KEY = "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";
+
+  // --- ROTATING PLACEHOLDERS ---
+  const placeholders = [
+    "e.g. Rahul from the Plum team was incredibly patient through the whole process...",
+    "e.g. I'd been sitting on this for two years. What finally made me do it was...",
+    "e.g. My employer had Plum for group cover, so I already trusted the name. But still...",
+    "e.g. The claim process was the thing I was most nervous about. Here's what actually happened..."
+  ];
+  let placeholderIdx = 0;
+  const freetextEl = document.getElementById("freetext");
+  setInterval(() => {
+    if (document.activeElement !== freetextEl && !freetextEl.value) {
+      placeholderIdx = (placeholderIdx + 1) % placeholders.length;
+      freetextEl.placeholder = placeholders[placeholderIdx];
+    }
+  }, 3500);
+  freetextEl.placeholder = placeholders[0];
+
+  // --- STARS ---
+  let rating = 0;
+  const starLabels = ["", "Not great", "Okay-ish", "Decent", "Quite good", "Really good"];
+  const stars = document.querySelectorAll(".star");
+  stars.forEach(s => {
+    s.addEventListener("click", () => {
+      rating = parseInt(s.dataset.v);
+      document.getElementById("starLabel").textContent = starLabels[rating];
+      updateStars(rating);
+    });
+    s.addEventListener("mouseover", () => updateStars(parseInt(s.dataset.v)));
+    s.addEventListener("mouseout", () => updateStars(rating));
+  });
+  function updateStars(n) {
+    stars.forEach(s => s.classList.toggle("active", parseInt(s.dataset.v) <= n));
+  }
+
+  // --- TAGS ---
+  let selectedTags = [];
+  document.querySelectorAll(".tag").forEach(t => {
+    t.addEventListener("click", () => {
+      t.classList.toggle("sel");
+      const v = t.dataset.val;
+      selectedTags = t.classList.contains("sel") ? [...selectedTags, v] : selectedTags.filter(x => x !== v);
+    });
+  });
+
+  // --- TONE ---
+  let selectedTone = "conversational and warm, like texting a friend who needs advice";
+  document.querySelectorAll(".tone-btn").forEach(b => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(".tone-btn").forEach(x => x.classList.remove("sel"));
+      b.classList.add("sel");
+      selectedTone = b.dataset.val;
+    });
+  });
+
+  // --- CHAR COUNT ---
+  freetextEl.addEventListener("input", () => {
+    if (freetextEl.value.length > 300) freetextEl.value = freetextEl.value.slice(0, 300);
+    document.getElementById("charCount").textContent = freetextEl.value.length + " / 300";
+  });
+
+  // --- PROMPT BUILDER ---
+  function buildPrompt() {
+    const ratingMap = { 1: "disappointing", 2: "okay but underwhelming", 3: "decent, better than expected", 4: "quite good", 5: "genuinely great" };
+    const rLabel = ratingMap[rating] || "decent overall";
+    const skepticTags = ["Wasn't sure claims would actually work","Had been mis-sold before","Kept putting it off","Expected hidden fine print","Didn't trust the support would last"];
+    const negativeTags = ["Onboarding felt slow","Policy language still confusing","Had to follow up too often","Claim process was more complex than expected","Wasn't clear who to reach out to","Perks were harder to use than advertised"];
+    const positives = selectedTags.filter(t => !skepticTags.includes(t) && !negativeTags.some(n => t.includes(n.toLowerCase().slice(0,10))));
+    const skepticisms = selectedTags.filter(t => skepticTags.some(s => t.includes(s.toLowerCase().slice(0,10))));
+    const negatives = selectedTags.filter(t => negativeTags.some(n => t.startsWith(n.slice(0,10)) || n.startsWith(t.slice(0,10))));
+    const extra = freetextEl.value.trim();
+
+    return `You are ghostwriting a LinkedIn post for someone who just bought personal health insurance from Plum Personal, a D2C health insurer in India.
+
+About their experience:
+- Overall rating: ${rating || 3}/5 (${rLabel})
+- What went well for them: ${positives.length ? positives.join("; ") : "nothing specific selected"}
+- Doubts or skepticisms they came in with: ${skepticisms.length ? skepticisms.join("; ") : "none selected"}
+- What could have been better: ${negatives.length ? negatives.join("; ") : "none selected"}
+- Their own words: ${extra || "none provided"}
+- Tone they want: ${selectedTone}
+
+Reference post style (this is from a competitor's happy customer -- match this structure and feel, not the length):
+"In December, I turned 30. A few days later, I found myself stuck with a slightly uncomfortable question. If something happens to me, what next? [...] Many agents would have moved on. Except, Ditto didn't."
+
+Write a LinkedIn post following these rules:
+
+1. Open with a specific moment -- a birthday, a scare, a conversation, a delayed decision. Something real and grounded that will make someone stop scrolling. Do not open with "I finally..." or a generic statement about insurance.
+
+2. Acknowledge that insurance is an industry with a trust problem. The person came in skeptical. Weave in one of their skepticisms naturally -- not as a list item, as a lived experience.
+
+3. If they flagged anything that could have been better, don't hide it. A post that mentions one rough edge alongside genuine positives reads far more credible than a purely glowing one. Keep it honest and proportionate.
+
+3. Move into what actually shifted. Weave in 1-2 things from their specific positives naturally. If they mentioned someone by name in their own words, use it -- named advisors make posts more human.
+
+4. Include a natural, brief mention of Plum Hub -- the personalised profile they were part of during the sales journey, where they could try out perks like teleconsults and health checkups before committing to buying. This should feel like a genuine observation ("what got me was being able to actually use it before I'd even paid for it") not a feature callout.
+
+5. Close with one honest observation. Not a call to action. Not "if you're thinking about insurance, DM me." Something a person would actually think after going through this.
+
+6. Add #personallyplum as the only hashtag at the very end on its own line.
+
+7. Hard rules on language:
+   - No exclamation marks
+   - No words: "seamless", "transparent", "journey", "game changer", "delighted", "thrilled"
+   - Do not say "fully cashless" -- Plum's claims are mostly cashless but not entirely
+   - Mention Plum by name once, naturally
+   - Length: 180-240 words maximum
+   - Tone: ${selectedTone}
+
+8. Every generation must be meaningfully different in opening, structure, and phrasing.
+
+Output only the post text. No preamble.`;
+  }
+
+  // --- GENERATE ---
+  let lastPost = "";
+
+  async function generate() {
+    const btn = document.getElementById("genBtn");
+    const errorEl = document.getElementById("errorMsg");
+    const outputSection = document.getElementById("outputSection");
+    const loadingWrap = document.getElementById("loadingWrap");
+    const postBody = document.getElementById("postBody");
+
+    errorEl.classList.remove("visible");
+    btn.disabled = true;
+    btn.textContent = "Writing...";
+    outputSection.classList.add("visible");
+    loadingWrap.classList.add("visible");
+    postBody.style.display = "none";
+    postBody.textContent = "";
+
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{ role: "user", content: buildPrompt() }]
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error?.message || "API error " + res.status);
+      }
+
+      const data = await res.json();
+      const text = data.content?.find(b => b.type === "text")?.text || "";
+      lastPost = text.trim();
+      postBody.textContent = lastPost;
+      document.getElementById("wordCount").textContent = lastPost.split(/\s+/).filter(Boolean).length + " words";
+      loadingWrap.classList.remove("visible");
+      postBody.style.display = "block";
+
+    } catch(e) {
+      loadingWrap.classList.remove("visible");
+      outputSection.classList.remove("visible");
+      showError("Something went wrong: " + e.message);
+    }
+
+    btn.disabled = false;
+    btn.textContent = "Write my post";
+  }
+
+  function regenerate() { generate(); }
+
+  function showError(msg) {
+    const el = document.getElementById("errorMsg");
+    el.textContent = msg;
+    el.classList.add("visible");
+  }
+
+  function copyPost() {
+    if (!lastPost) return;
+    navigator.clipboard.writeText(lastPost).then(() => {
+      const t = document.getElementById("toast");
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2500);
+    });
+  }
+
+  function openLinkedIn() {
+    window.open("https://www.linkedin.com/feed/", "_blank");
+  }
+</script>
+</body>
+</html>
