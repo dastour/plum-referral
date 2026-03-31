@@ -324,10 +324,10 @@
 <script>
   // --- CONFIG ---
   // Replace the value below with your actual Anthropic API key before deploying
-  let ANTHROPIC_API_KEY = prompt("Enter your Anthropic API key:") || "";
-  if (!ANTHROPIC_API_KEY) {
-    ANTHROPIC_API_KEY = prompt("Enter your Anthropic API key to continue:") || "";
-    if (ANTHROPIC_API_KEY) sessionStorage.setItem("plum_ak", ANTHROPIC_API_KEY);
+  let GEMINI_API_KEY = sessionStorage.getItem("plum_gk") || "";
+  if (!GEMINI_API_KEY) {
+    GEMINI_API_KEY = prompt("Enter your Gemini API key to continue:") || "";
+    if (GEMINI_API_KEY) sessionStorage.setItem("plum_gk", GEMINI_API_KEY);
   }
 
   // --- ROTATING PLACEHOLDERS ---
@@ -462,18 +462,12 @@ Output only the post text. No preamble.`;
     postBody.textContent = "";
 
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": ANTHROPIC_API_KEY,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          messages: [{ role: "user", content: buildPrompt() }]
+          contents: [{ parts: [{ text: buildPrompt() }] }],
+          generationConfig: { maxOutputTokens: 1000, temperature: 1.0 }
         })
       });
 
@@ -483,7 +477,7 @@ Output only the post text. No preamble.`;
       }
 
       const data = await res.json();
-      const text = data.content?.find(b => b.type === "text")?.text || "";
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
       lastPost = text.trim();
       postBody.textContent = lastPost;
       document.getElementById("wordCount").textContent = lastPost.split(/\s+/).filter(Boolean).length + " words";
