@@ -324,7 +324,7 @@
 <script>
   // --- CONFIG ---
   // Replace the value below with your actual Anthropic API key before deploying
-  let ANTHROPIC_API_KEY = sessionStorage.getItem("plum_ak") || "";
+  let ANTHROPIC_API_KEY = prompt("Enter your Anthropic API key:") || "";
   if (!ANTHROPIC_API_KEY) {
     ANTHROPIC_API_KEY = prompt("Enter your Anthropic API key to continue:") || "";
     if (ANTHROPIC_API_KEY) sessionStorage.setItem("plum_ak", ANTHROPIC_API_KEY);
