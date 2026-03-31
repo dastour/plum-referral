@@ -324,11 +324,7 @@
 <script>
   // --- CONFIG ---
   // Replace the value below with your actual Anthropic API key before deploying
-  let ANTHROPIC_API_KEY = sessionStorage.getItem("plum_ak") || "";
-  if (!ANTHROPIC_API_KEY) {
-    ANTHROPIC_API_KEY = prompt("Enter your Anthropic API key to continue:") || "";
-    if (ANTHROPIC_API_KEY) sessionStorage.setItem("plum_ak", ANTHROPIC_API_KEY);
-  }
+  const WORKER_URL = "https://plum-post-generator.asmit186.workers.dev/";
 
   // --- ROTATING PLACEHOLDERS ---
   const placeholders = [
@@ -416,7 +412,7 @@ Reference post style (this is from a competitor's happy customer -- match this s
 
 Write a LinkedIn post following these rules:
 
-1. Open with a specific moment -- a birthday, a scare, a conversation, a delayed decision. Something real and grounded that will make someone stop scrolling. Do not open with "I finally..." or a generic statement about insurance.
+1. Open with a specific moment ONLY if the person has shared one in their own words above. If they haven't, open with a short observational statement about insurance as an industry -- something anyone who has tried to buy insurance would recognise as true. Do not invent personal details, dates, or events that weren't provided. Do not open with "I finally..." or a generic statement about feeling protected.
 
 2. Acknowledge that insurance is an industry with a trust problem. The person came in skeptical. Weave in one of their skepticisms naturally -- not as a list item, as a lived experience.
 
@@ -462,17 +458,10 @@ Output only the post text. No preamble.`;
     postBody.textContent = "";
 
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch(WORKER_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": ANTHROPIC_API_KEY,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
           messages: [{ role: "user", content: buildPrompt() }]
         })
       });
