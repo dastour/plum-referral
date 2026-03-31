@@ -324,7 +324,11 @@
 <script>
   // --- CONFIG ---
   // Replace the value below with your actual Anthropic API key before deploying
-  const ANTHROPIC_API_KEY = "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";
+  let ANTHROPIC_API_KEY = sessionStorage.getItem("plum_ak") || "";
+  if (!ANTHROPIC_API_KEY) {
+    ANTHROPIC_API_KEY = prompt("Enter your Anthropic API key to continue:") || "";
+    if (ANTHROPIC_API_KEY) sessionStorage.setItem("plum_ak", ANTHROPIC_API_KEY);
+  }
 
   // --- ROTATING PLACEHOLDERS ---
   const placeholders = [
